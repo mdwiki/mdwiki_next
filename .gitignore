@@ -1,0 +1,8 @@
+build
+dist
+.vs_code
+.next
+node_modules
+tags
+Session.vim
+

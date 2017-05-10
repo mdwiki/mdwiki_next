@@ -1,0 +1,37 @@
+parser: 'babel-eslint'
+env:
+  es6: true
+  node: true
+plugins:
+  - react
+extends: 
+  - 'eslint:recommended'
+  - 'plugin:react/recommended'
+rules:
+  indent:
+    - error
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  no-console:
+    - off
+  no-unused-vars:
+    - off
+    - vars: all
+      args: after-used
+  no-trailing-spaces:
+    - 2
+  react/display-name:
+    - off
+  react/prop-types:
+    - off
+
+globals:
+  window: true
