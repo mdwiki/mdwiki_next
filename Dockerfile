@@ -8,14 +8,14 @@ ADD package.json yarn.lock /app/
 
 RUN yarn install
 
-ADD components /app/components
+#ADD components /app/components
 ADD pages /app/pages
 ADD server /app/server
-ADD static /app/static
+#ADD static /app/static
 
 RUN [ "npm", "run", "build" ]
 
-EXPOSE 3333
+EXPOSE 80
 
 CMD [ "node", "server/server.js" ]
 

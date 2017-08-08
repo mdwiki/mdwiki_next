@@ -1,4 +1,4 @@
-IMAGE_NAME="karolina:latest"
+IMAGE_NAME="mdwiki:latest"
 
-docker load -i karolina_latest 
+docker load -i mdwiki:latest 
 
