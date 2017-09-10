@@ -36,3 +36,4 @@ rules:
 
 globals:
   window: true
+  fetch: true

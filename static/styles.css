@@ -1,0 +1,62 @@
+@import url('reset.css');
+
+html, body {
+  font-size: 14px;
+}
+
+.Main-container {
+  display: grid;
+  height: 100vh;
+  overflow: hidden;
+
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "header"
+    "content";
+}
+
+.Sidebar {
+  display: none;
+}
+
+.AppBar {
+  grid-area: header;
+  position: inherit !important;
+}
+
+.LeftSidebar {
+  width: 240px;
+}
+
+.AppContent-container {
+  grid-area: content;
+}
+
+
+@media (min-width: 769px) {
+  .Main-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "header"
+      "content";
+  }
+
+  .Main-container.show-sidebar {
+    grid-template-columns: 240px 1fr;
+    grid-template-areas:
+      "header header"
+      "sidebar content";
+  }
+
+  .Sidebar {
+    display: flex;
+    grid-area: sidebar;
+  }
+
+  .ToggleSidebar-button {
+    display: none !important;
+  }
+}
+

@@ -3,7 +3,7 @@ import { initStore } from './../stores/store.js';
 import { observer } from 'mobx-react';
 import PageLayout from './../components/page-layout.js';
 
-@observer export default class IndexPage extends React.Component {
+@observer export default class ConnectPage extends React.Component {
   static async getInitialProps({ req }) {
     const isServer = !!req;
     const userAgent = isServer ? req.headers['user-agent'] : window.navigator.userAgent;
@@ -25,9 +25,11 @@ import PageLayout from './../components/page-layout.js';
     return (
       <PageLayout
         userAgent={this.props.userAgent}
-        store={this.store}>
-          This is MDWiki
+        store={this.store}
+        showSidebar={false}>
+          This is the connect page...
       </PageLayout>
     );
   }
 }
+

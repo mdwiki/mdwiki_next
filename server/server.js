@@ -2,6 +2,7 @@ const Koa = require('koa');
 const next = require('next');
 const Router = require('koa-router');
 const mobxReact = require('mobx-react');
+const fetch = require('node-fetch');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -9,6 +10,10 @@ const handle = app.getRequestHandler();
 const PORT = process.env.NODE_ENV === 'production' ? 80 : 3333;
 
 mobxReact.useStaticRendering(true);
+
+if (!global.fetch) {
+  global.fetch = fetch;
+}
 
 app.prepare().then(() => {
   const server = new Koa();
