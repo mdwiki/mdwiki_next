@@ -13,9 +13,20 @@ import github from './../services/github.service.js';
     this.fetchItems(this.props.store);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.fetchItems(nextProps.store);
+  }
+
   @action async fetchItems(store) {
-    const items = await github.fetchItems(store.settings.user, store.settings.repository, store.settings.oauthToken);
-    store.items = items;
+    if (store.settings && store.settings.user) {
+      const items = await github.fetchItems(
+        store.settings.user,
+        store.settings.repository,
+        store.user && store.user.isLoggedIn ? store.user.accessToken : undefined
+      );
+
+      store.items = items;
+    }
   }
 
   renderItem(item) {
@@ -27,9 +38,7 @@ import github from './../services/github.service.js';
   render() {
     const store = this.props.store;
     if (!store.items) {
-      return (
-        <div>Items will be loaded...</div>
-      );
+      return null;
     }
 
     return (

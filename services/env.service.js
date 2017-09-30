@@ -1,3 +1,3 @@
 export default {
-  isClient: () => typeof window !== 'undefined'
+  isServer: () => typeof window === 'undefined'
 };

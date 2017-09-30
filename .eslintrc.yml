@@ -37,3 +37,4 @@ rules:
 globals:
   window: true
   fetch: true
+  Headers: true

@@ -8,25 +8,30 @@ import PageLayout from './../components/page-layout.js';
     const isServer = !!req;
     const userAgent = isServer ? req.headers['user-agent'] : window.navigator.userAgent;
 
-    const store = initStore();
-
     return {
-      isServer,
       userAgent
     };
   }
 
   constructor(props) {
     super(props);
-    this.store = initStore(props.isServer, props.lastUpdate);
+    this.store = initStore();
+  }
+
+  componentDidMount() {
+    this.store = initStore();
   }
 
   render() {
+    if (!this.store) {
+      return null;
+    }
+
     return (
       <PageLayout
         userAgent={this.props.userAgent}
         store={this.store}>
-          This is MDWiki
+          This is MDWiki { this.store.user ? this.store.user.name : '' }
       </PageLayout>
     );
   }

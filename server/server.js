@@ -1,13 +1,18 @@
 const Koa = require('koa');
 const next = require('next');
 const Router = require('koa-router');
+const bodyParser = require('koa-bodyparser');
+const session = require('koa-session');
 const mobxReact = require('mobx-react');
+const config = require('config');
 const fetch = require('node-fetch');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
-const PORT = process.env.NODE_ENV === 'production' ? 80 : 3333;
+const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
+
+global.host = dev ? `http://localhost:${PORT}` : 'https://www.mdwiki.net';
 
 mobxReact.useStaticRendering(true);
 
@@ -19,15 +24,51 @@ app.prepare().then(() => {
   const server = new Koa();
   const router = new Router();
 
-  //router.get('/api/messages', async ctx => {
-  //let messages;
-  //if (ctx.query.search) {
-  //messages = messageService.search(ctx.query.search);
-  //} else {
-  //messages = messageService.getAll();
-  //}
-  //ctx.body = messages;
-  //});
+  server.use(bodyParser());
+
+  server.keys = ['7pb0HHz9Mwq5yZfw'];
+  server.use(session({}, server));
+
+  require('./auth.js');
+  const passport = require('koa-passport');
+  server.use(passport.initialize());
+  server.use(passport.session());
+
+  router.get('/config', async ctx => {
+    ctx.body = config.client;
+    ctx.status = 200;
+  });
+
+  router.get('/auth/logout', (ctx) => {
+    ctx.logout();
+    ctx.redirect();
+  });
+
+  router.get('/auth/github', passport.authenticate('github'));
+
+  router.get('/auth/github/callback',
+    passport.authenticate('github', { failureRedirect: '/' }),
+    (ctx) => {
+      if (ctx.session.passport && ctx.session.passport.user) {
+        const user = ctx.session.passport.user;
+        ctx.redirect(`/login?user=${user.name}&accessToken=${user.accessToken}`);
+      } else {
+        ctx.redirect('/');
+      }
+    }
+  );
+
+  router.get('/auth/user', ctx => {
+    let user = {};
+    if (ctx.session.passport) {
+      user = Object.assign(user, ctx.session.passport.user);
+    }
+
+    user.isAuthenticated = user.name !== undefined;
+
+    ctx.body = user;
+    ctx.status = 200;
+  });
 
   router.get('*', async ctx => {
     await handle(ctx.req, ctx.res);

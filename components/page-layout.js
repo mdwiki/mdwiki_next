@@ -13,6 +13,7 @@ import classNames from 'classnames';
 
 import GithubIcon from './github-icon.js';
 import SearchButton from './search-button.js';
+import UserIcon from './user-icon.js';
 import ItemList from './item-list.js';
 import { screensizes } from './../common/styles/screensizes.js';
 
@@ -35,10 +36,6 @@ export default class PageLayout extends React.Component {
     showLeftSidebar: false
   };
 
-  logout() {
-    //authService.logout();
-  }
-
   toggleLeftSidebar() {
     const showLeftSidebar = this.state.showLeftSidebar;
     this.setState({ showLeftSidebar: !showLeftSidebar });
@@ -52,6 +49,11 @@ export default class PageLayout extends React.Component {
   }
 
   login() {
+    Router.push('/login');
+  }
+
+  logout() {
+    Router.push('/logout');
   }
 
   renderStaticSidebar(store) {
@@ -73,6 +75,33 @@ export default class PageLayout extends React.Component {
         <ItemList store={store} />
       </Drawer>
     );
+  }
+
+  renderLoginButton() {
+    return (
+      <IconButton title="Login" color="contrast" aria-label="Login"
+        onClick={() => this.login()}>
+        <AccountIcon />
+      </IconButton>
+    );
+  }
+
+  renderLogoutButton() {
+    const user = this.props.store.user || {};
+
+    return (
+      <IconButton
+        title={ `Logout ${user.name}`}
+        color="contrast"
+        aria-label="Logout"
+        onClick={() => this.logout()}>
+        <UserIcon userName={user.name} avatarUrl={user.avatarUrl} />
+      </IconButton>
+    );
+  }
+
+  isUserLoggedIn() {
+    return this.props.store.user && this.props.store.user.isLoggedIn;
   }
 
   render() {
@@ -98,14 +127,12 @@ export default class PageLayout extends React.Component {
               { this.props.title }
             </Typography>
             <SearchButton store={this.props.store} />
-            <IconButton color="contrast" aria-label="Connect"
-              onClick={() => this.login(this.props.store)}>
-              <AccountIcon />
-            </IconButton>
-            <IconButton title="GitHub" color="contrast"
+            <IconButton title="Connect to a Github repository" color="contrast" aria-label="Connect"
               onClick={() => this.connect(this.props.store)} >
               <GithubIcon />
             </IconButton>
+            {!this.isUserLoggedIn() && this.renderLoginButton()}
+            {this.isUserLoggedIn() && this.renderLogoutButton()}
           </Toolbar>
         </AppBar>
 
