@@ -125,7 +125,7 @@ export default class PageLayout extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography type="title" color="inherit" className="AppTitle">
-              <Link href="/">{ this.props.title }</Link>
+              <Link href="/"><a>{ this.props.title }</a></Link>
             </Typography>
             <SearchButton store={this.props.store} />
             <IconButton title="Connect to a Github repository" color="contrast" aria-label="Connect"
