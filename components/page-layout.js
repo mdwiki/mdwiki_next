@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Router from 'next/router';
+import Link from 'next/link';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
@@ -124,7 +125,7 @@ export default class PageLayout extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography type="title" color="inherit" className="AppTitle">
-              { this.props.title }
+              <Link href="/">{ this.props.title }</Link>
             </Typography>
             <SearchButton store={this.props.store} />
             <IconButton title="Connect to a Github repository" color="contrast" aria-label="Connect"
@@ -146,6 +147,11 @@ export default class PageLayout extends React.Component {
         <style jsx> {`
           :global(.AppTitle) {
             flex: 1;
+          }
+
+          :global(.AppTitle > a){
+            text-decoration: none;
+            color: inherit;
           }
 
           @media (min-width: ${ screensizes.smallTablet }) {
