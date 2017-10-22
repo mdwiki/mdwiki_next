@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
-import { initStore } from './../stores/store.js';
+import { initAppStore } from './../stores/app.store.js';
 
 export default class LogoutPage extends React.Component {
   componentDidMount() {
-    initStore({ isLoggedIn: false });
+    initAppStore({ isLoggedIn: false });
     Router.push('/');
   }
 

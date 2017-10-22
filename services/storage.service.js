@@ -2,7 +2,10 @@ import env from './../services/env.service.js';
 
 class StorageService {
   getDb() {
-    return !env.isServer() ? window.localStorage : {};
+    if (env.isServer()) {
+      return {};
+    }
+    return window.localStorage;
   }
 
   get(key) {
@@ -13,8 +16,8 @@ class StorageService {
     this.getDb().setItem(key, value);
   }
 
-  setObject(key, value) {
-    this.set(key, JSON.stringify(value));
+  setObject(key, object) {
+    this.set(key, JSON.stringify(object));
   }
 
   getObject(key) {

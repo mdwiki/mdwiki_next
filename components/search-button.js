@@ -5,11 +5,11 @@ import SearchIcon from 'material-ui-icons/Search';
 
 export default class SearchButton extends React.Component {
   static propTypes = {
-    store: PropTypes.object.isRequired
+    appStore: PropTypes.object.isRequired
   };
 
   onSearchClicked() {
-    this.props.store.startSearch();
+    this.props.appStore.startSearch();
   }
 
   onInputKeydown(e) {
@@ -27,7 +27,7 @@ export default class SearchButton extends React.Component {
           <SearchIcon />
         </IconButton>
         <input placeholder="Search..."
-          onChange={e => { this.props.store.searchValue = e.target.value; } }
+          onChange={e => { this.props.appStore.searchValue = e.target.value; } }
           onKeyDown={e => this.onInputKeydown(e) } />
 
         <style jsx> {`

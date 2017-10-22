@@ -1,30 +1,52 @@
 const GITHUB_API_URL = 'https://api.github.com';
 
 class GithubService {
-  buildOptions(accessToken, method = 'GET') {
+  constructor() {
+    this.accessToken = undefined;
+  }
+
+  buildOptions(method = 'GET') {
     const options = { method: method };
-    if (accessToken) {
+    // console.log('buildOptions', this.accessToken);
+    if (this.accessToken) {
       const headers = new Headers();
-      headers.append('Authorization', `token ${accessToken}`);
+      headers.append('Authorization', `token ${this.accessToken}`);
 
       options.headers = headers;
     }
     return options;
   }
 
-  async _get(url, accessToken) {
-    const options = this.buildOptions(accessToken);
+  async _get(url) {
+    const options = this.buildOptions();
     const response = await fetch(`${GITHUB_API_URL}${url}`, options);
-    return response.json();
+    if (response.status === 200) {
+      return response.json();
+    }
+    return undefined;
   }
 
-  fetchItems(userName, repository, accessToken) {
+  fetchItems(userName, repository) {
     const url = `/repos/${userName}/${repository}/contents`;
-    return this._get(url, accessToken);
+    return this._get(url);
   }
 
-  getUser(userName, accessToken) {
-    return this._get(`/users/${userName}`, accessToken);
+  async getUser(userName) {
+    try {
+      const user = await this._get(`/users/${userName}`);
+      return user;
+    } catch(error) {
+      console.log('Error while fetching user', userName);
+    }
+  }
+
+  async getRepository(userName, repositoryName) {
+    try {
+      const user = await this._get(`/repos/${userName}/${repositoryName}`);
+      return user;
+    } catch(error) {
+      console.log('Error while fetching repository', userName, repositoryName);
+    }
   }
 }
 

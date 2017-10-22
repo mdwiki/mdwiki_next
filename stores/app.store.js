@@ -1,12 +1,13 @@
-import { action, observable, autorun } from 'mobx';
+import { action, observable, reaction } from 'mobx';
 import env from './../services/env.service.js';
 import storage from './../services/storage.service.js';
+import github from './../services/github.service.js';
 
-let store = null;
+let appStore = null;
 
 const defaultSettings = { user: 'mdwiki', repository: 'wiki' };
 
-class Store {
+class AppStore {
   @observable isServer = false;
   @observable searchValue = '';
   @observable settings = null;
@@ -20,17 +21,21 @@ class Store {
   @action setUser(user) {
     this.user = user;
     this.saveToStorage();
+
+    if (user.isLoggedIn) {
+      github.accessToken = user.accessToken;
+    }
   }
 
   @action changeSettings(settings) {
-    this.setting = settings;
+    this.settings = settings;
     this.saveToStorage();
   }
 
   @action readFromStorage() {
-    this.user = storage.getObject('user') || { isLoggedIn: false };
     this.settings = storage.getObject('settings') || defaultSettings;
     this.searchValue = storage.get('searchValue');
+    this.user = storage.getObject('user') || { isLoggedIn: false };
   }
 
   saveToStorage() {
@@ -40,24 +45,27 @@ class Store {
 
   @action startSearch() {
   }
+
 }
 
-export function initStore(user) {
+export function initAppStore(user) {
   const isServer = env.isServer();
   if (isServer) {
-    return new Store(isServer);
+    return new AppStore(isServer);
   }
 
-  if (store === null) {
-    store = new Store(isServer);
-    store.readFromStorage();
+  if (appStore === null) {
+    appStore = new AppStore(isServer);
+    appStore.readFromStorage();
 
-    window.STORE = store;
+    github.accessToken = appStore.user.accessToken;
+    window.APP_STORE = appStore;
   }
 
   if (user) {
-    store.setUser(user);
+    appStore.setUser(user);
   }
-  return store;
+
+  return appStore;
 }
 

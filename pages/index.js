@@ -1,6 +1,6 @@
 import React from 'react';
-import { initStore } from './../stores/store.js';
 import { observer } from 'mobx-react';
+import { initAppStore } from './../stores/app.store.js';
 import PageLayout from './../components/page-layout.js';
 
 @observer export default class IndexPage extends React.Component {
@@ -15,23 +15,23 @@ import PageLayout from './../components/page-layout.js';
 
   constructor(props) {
     super(props);
-    this.store = initStore();
+    this.appStore = initAppStore();
   }
 
   componentDidMount() {
-    this.store = initStore();
+    this.appStore = initAppStore();
   }
 
   render() {
-    if (!this.store) {
+    if (!this.appStore) {
       return null;
     }
 
     return (
       <PageLayout
         userAgent={this.props.userAgent}
-        store={this.store}>
-          This is MDWiki { this.store.user ? this.store.user.name : '' }
+        appStore={this.appStore}>
+          This is MDWiki { this.appStore.user ? this.appStore.user.name : '' }
       </PageLayout>
     );
   }

@@ -22,7 +22,7 @@ export default class PageLayout extends React.Component {
   static propTypes = {
     children: PropTypes.any.isRequired,
     userAgent: PropTypes.string.isRequired,
-    store: PropTypes.object.isRequired,
+    appStore: PropTypes.object.isRequired,
     title: PropTypes.string,
     showSidebar: PropTypes.bool
   };
@@ -42,10 +42,10 @@ export default class PageLayout extends React.Component {
     this.setState({ showLeftSidebar: !showLeftSidebar });
   }
 
-  connect(store) {
+  connect(appStore) {
     Router.push({
       pathname: '/connect',
-      query: { user: store.settings.user, repository: store.settings.repository }
+      query: { user: appStore.settings.user, repository: appStore.settings.repository }
     });
   }
 
@@ -57,15 +57,15 @@ export default class PageLayout extends React.Component {
     Router.push('/logout');
   }
 
-  renderStaticSidebar(store) {
+  renderStaticSidebar(appStore) {
     return (
       <div className="Sidebar">
-        <ItemList store={store} />
+        <ItemList appStore={appStore} />
       </div>
     );
   }
 
-  renderMobileSidebar(store) {
+  renderMobileSidebar(appStore) {
     return (
       <Drawer className="LeftSidebar"
         type="temporary"
@@ -73,7 +73,7 @@ export default class PageLayout extends React.Component {
         open={this.state.showLeftSidebar}
         onRequestClose={() => this.toggleLeftSidebar()}
         onClick={() => this.toggleLeftSidebar()}>
-        <ItemList store={store} />
+        <ItemList appStore={appStore} />
       </Drawer>
     );
   }
@@ -88,7 +88,7 @@ export default class PageLayout extends React.Component {
   }
 
   renderLogoutButton() {
-    const user = this.props.store.user || {};
+    const user = this.props.appStore.user || {};
 
     return (
       <IconButton
@@ -102,7 +102,7 @@ export default class PageLayout extends React.Component {
   }
 
   isUserLoggedIn() {
-    return this.props.store.user && this.props.store.user.isLoggedIn;
+    return this.props.appStore.user && this.props.appStore.user.isLoggedIn;
   }
 
   render() {
@@ -127,9 +127,9 @@ export default class PageLayout extends React.Component {
             <Typography type="title" color="inherit" className="AppTitle">
               <Link href="/"><a>{ this.props.title }</a></Link>
             </Typography>
-            <SearchButton store={this.props.store} />
+            <SearchButton appStore={this.props.appStore} />
             <IconButton title="Connect to a Github repository" color="contrast" aria-label="Connect"
-              onClick={() => this.connect(this.props.store)} >
+              onClick={() => this.connect(this.props.appStore)} >
               <GithubIcon />
             </IconButton>
             {!this.isUserLoggedIn() && this.renderLoginButton()}
@@ -137,8 +137,8 @@ export default class PageLayout extends React.Component {
           </Toolbar>
         </AppBar>
 
-        { this.props.showSidebar && this.renderMobileSidebar(this.props.store) }
-        { this.props.showSidebar && this.renderStaticSidebar(this.props.store) }
+        { this.props.showSidebar && this.renderMobileSidebar(this.props.appStore) }
+        { this.props.showSidebar && this.renderStaticSidebar(this.props.appStore) }
 
         <div className="AppContent-container">
           { this.props.children }

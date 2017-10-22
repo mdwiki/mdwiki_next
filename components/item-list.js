@@ -6,26 +6,25 @@ import github from './../services/github.service.js';
 
 @observer export default class ItemList extends React.Component {
   static propTypes = {
-    store: PropTypes.object.isRequired
+    appStore: PropTypes.object.isRequired
   };
 
   componentDidMount() {
-    this.fetchItems(this.props.store);
+    this.fetchItems(this.props.appStore);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.fetchItems(nextProps.store);
+    this.fetchItems(nextProps.appStore);
   }
 
-  @action async fetchItems(store) {
-    if (store.settings && store.settings.user) {
+  @action async fetchItems(appStore) {
+    if (appStore.settings && appStore.settings.user) {
       const items = await github.fetchItems(
-        store.settings.user,
-        store.settings.repository,
-        store.user && store.user.isLoggedIn ? store.user.accessToken : undefined
+        appStore.settings.user,
+        appStore.settings.repository
       );
 
-      store.items = items;
+      appStore.items = items;
     }
   }
 
@@ -36,14 +35,14 @@ import github from './../services/github.service.js';
   }
 
   render() {
-    const store = this.props.store;
-    if (!store.items) {
+    const appStore = this.props.appStore;
+    if (!appStore.items) {
       return null;
     }
 
     return (
       <div>
-        {store.items.map(item => this.renderItem(item))}
+        {appStore.items.map(item => this.renderItem(item))}
       </div>
     );
   }
