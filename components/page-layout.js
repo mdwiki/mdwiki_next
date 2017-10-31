@@ -58,7 +58,8 @@ export default class PageLayout extends React.Component {
   }
 
   goHome() {
-    Router.push({ pathname: '/', query: { itemName: 'index' }});
+    Router.push({ pathname: '/', query: { itemName: 'index.md' }});
+    this.props.appStore.selectedItem = 'index.md';
   }
 
   renderStaticSidebar(appStore) {
@@ -130,9 +131,7 @@ export default class PageLayout extends React.Component {
               onClick={() => this.toggleLeftSidebar()}>
               <MenuIcon />
             </IconButton>
-            <Link href="/?itemName=index">
-              <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" />
-            </Link>
+            <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" onClick={() => this.goHome()} />
             <SearchButton appStore={this.props.appStore} />
             <IconButton title="Connect to a Github repository" color="contrast" aria-label="Connect"
               onClick={() => this.connect(this.props.appStore)} >

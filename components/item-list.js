@@ -33,11 +33,12 @@ const EXCLUDE_ITEMS = ['index.md', 'readme.md'];
   }
 
   itemFilter(item) {
-    return item.name.endsWith('.md') && !EXCLUDE_ITEMS.some(itemName => itemName === item.name.toLowerCase());
+    return item.name.endsWith('.md') &&
+      !EXCLUDE_ITEMS.some(itemName => itemName === item.name.toLowerCase());
   }
 
   onItemClick(item) {
-    this.props.appStore.changeSelectedItem(item);
+    this.props.appStore.changeSelectedItem(item.name);
   }
 
   renderSubHeader(itemName) {

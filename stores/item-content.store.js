@@ -10,19 +10,23 @@ import github from './../services/github.service.js';
 const keys = new Set();
 
 export default class ItemContentStore {
+  @observable isBusy = false;
   @observable path = null;
   @observable markdownText = null;
   @observable markdownAsReact = null;
 
-  @action async changeContent(user, repository, path) {
-    const markdownText = await github.fetchItemContent(user, repository, path);
-    const markdownAsHtml = this.fixLinks(markdown.toHTML(markdownText));
-    const markdownAsReact = this.renderToReact(markdownAsHtml);
-    console.log('REact', markdownAsReact);
+  @action async changeContent(user, repository, itemName) {
+    this.isBusy = true;
 
-    this.path = path;
-    this.markdownText = markdownText;
-    this.markdownAsReact = markdownAsReact;
+    try {
+      this.itemName = itemName;
+      this.markdownText = await github.fetchItemContent(user, repository, itemName);
+      const markdownAsHtml = this.fixLinks(markdown.toHTML(this.markdownText));
+      this.markdownAsReact = this.renderToReact(markdownAsHtml);
+    } finally {
+      this.isBusy = false;
+    }
+
   }
 
   fixLinks(html) {

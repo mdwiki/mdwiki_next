@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
+import { CircularProgress } from 'material-ui/Progress';
 import github from './../services/github.service.js';
 import ItemContentStore from './../stores/item-content.store.js';
 
@@ -17,13 +18,13 @@ import ItemContentStore from './../stores/item-content.store.js';
   }
 
   componentDidMount() {
-    if (!this.itemContentStore.path) {
+    if (!this.itemContentStore.itemContentStore) {
       this.changeItemContent(this.props.itemName);
     }
 
     const changeReaction = reaction(
       () => this.props.appStore.selectedItem,
-      item => this.changeItemContent(item.path)
+      itemName => this.changeItemContent(itemName)
     );
   }
 
@@ -33,10 +34,10 @@ import ItemContentStore from './../stores/item-content.store.js';
     }
   }
 
-  updateLocation(pathname) {
+  updateLocation(itemName) {
     if (window) {
       const location = window.location;
-      const newUrl = `${location.origin}/${pathname}`;
+      const newUrl = `${location.origin}/${itemName}`;
       if (newUrl !== location.href) {
         window.history.replaceState({}, 'PageChange', newUrl);
       }
@@ -44,18 +45,46 @@ import ItemContentStore from './../stores/item-content.store.js';
     }
   }
 
-  changeItemContent(path) {
+  changeItemContent(itemName) {
     const settings = this.props.appStore.settings;
-    this.itemContentStore.changeContent(settings.user, settings.repository, path);
-    this.updateLocation(path.substr(0, path.length -3));
+    this.itemContentStore.changeContent(settings.user, settings.repository, itemName);
+    this.updateLocation(itemName.substr(0, itemName.length -3));
+  }
+
+  renderProgress() {
+    return (
+      <div className="ProgressBar-container">
+        <CircularProgress className="progress" size={50} />
+      </div>
+    );
   }
 
   render() {
     return (
       <div className="markdown-body">
+        {this.itemContentStore.isBusy && this.renderProgress()}
         {this.itemContentStore.markdownAsReact}
+
+        <style jsx> {`
+          :global(.ProgressBar-container) {
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f7fa;
+            opacity: 0.7;
+            height: calc(100vh - 100px);
+            width: calc(100vw - 300px);
+          }
+
+          :global(.progress) {
+            color: #2196f3;
+          
+          }
+        `}</style>
       </div>
     );
   }
+
 }
 
