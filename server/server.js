@@ -6,6 +6,7 @@ const session = require('koa-session');
 const mobxReact = require('mobx-react');
 const config = require('config');
 const fetch = require('node-fetch');
+const { parse } = require('url');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -13,6 +14,8 @@ const handle = app.getRequestHandler();
 const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
 global.host = dev ? `http://localhost:${PORT}` : 'https://www.mdwiki.net';
+
+const PAGE_NAMES = ['_next', 'connect', 'index'];
 
 mobxReact.useStaticRendering(true);
 
@@ -71,7 +74,17 @@ app.prepare().then(() => {
   });
 
   router.get('*', async ctx => {
-    await handle(ctx.req, ctx.res);
+    const parsedUrl = parse(ctx.req.url);
+    const { pathname, query } = parsedUrl;
+    const pageName = getPageName(pathname);
+    const isExistingPage = PAGE_NAMES.some(p => p === pageName);
+
+    if (!isExistingPage) {
+      await app.render(ctx.req, ctx.res, '/', { name: pageName });
+    } else {
+      await handle(ctx.req, ctx.res);
+    }
+
     ctx.respond = false;
   });
 
@@ -86,3 +99,13 @@ app.prepare().then(() => {
     console.log(`> Ready on; http://localhost:${PORT}`);
   });
 });
+
+
+function getPageName(pathname) {
+  if (pathname === '/') {
+    return 'index';
+  } else if (pathname.startsWith('/_next')) {
+    return '_next';
+  }
+  return pathname.substr(1);
+}

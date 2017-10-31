@@ -2,14 +2,16 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { initAppStore } from './../stores/app.store.js';
 import PageLayout from './../components/page-layout.js';
+import ItemContent from './../components/item-content.js';
 
 @observer export default class IndexPage extends React.Component {
-  static async getInitialProps({ req }) {
+  static async getInitialProps({ req, query }) {
     const isServer = !!req;
     const userAgent = isServer ? req.headers['user-agent'] : window.navigator.userAgent;
 
     return {
-      userAgent
+      userAgent,
+      itemName: query.name
     };
   }
 
@@ -27,11 +29,16 @@ import PageLayout from './../components/page-layout.js';
       return null;
     }
 
+    let itemName = this.props.itemName || 'index.md';
+    if (!itemName.endsWith('.md')) {
+      itemName += '.md';
+    }
+
     return (
       <PageLayout
         userAgent={this.props.userAgent}
         appStore={this.appStore}>
-          This is MDWiki { this.appStore.user ? this.appStore.user.name : '' }
+        <ItemContent appStore={this.appStore} itemName={itemName} />
       </PageLayout>
     );
   }

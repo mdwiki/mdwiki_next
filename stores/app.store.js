@@ -1,4 +1,4 @@
-import { action, observable, reaction } from 'mobx';
+import { action, observable } from 'mobx';
 import env from './../services/env.service.js';
 import storage from './../services/storage.service.js';
 import github from './../services/github.service.js';
@@ -13,6 +13,7 @@ class AppStore {
   @observable settings = null;
   @observable user = null;
   @observable items = null;
+  @observable selectedItem = null;
 
   constructor(isServer) {
     this.isServer = isServer;
@@ -44,6 +45,14 @@ class AppStore {
   }
 
   @action startSearch() {
+  }
+
+  @action changeSelectedItem(item) {
+    this.selectedItem = item;
+  }
+
+  @action setItems(items) {
+    this.items = items;
   }
 
 }

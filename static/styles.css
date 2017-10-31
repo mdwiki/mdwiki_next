@@ -26,13 +26,21 @@ html, body {
 }
 
 .LeftSidebar {
-  width: 240px;
 }
 
 .AppContent-container {
   grid-area: content;
+  padding: 10px;
+  overflow-y: auto;
 }
 
+.link-button {
+  font-size: 100%;
+  color: #0366d6;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
 
 @media (min-width: 769px) {
   .Main-container {
@@ -44,7 +52,7 @@ html, body {
   }
 
   .Main-container.show-sidebar {
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 270px 1fr;
     grid-template-areas:
       "header header"
       "sidebar content";
@@ -53,6 +61,7 @@ html, body {
   .Sidebar {
     display: flex;
     grid-area: sidebar;
+    overflow-y: auto;
   }
 
   .ToggleSidebar-button {

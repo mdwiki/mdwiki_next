@@ -35,6 +35,7 @@ rules:
     - off
 
 globals:
-  window: true
-  fetch: true
-  Headers: true
+  window: false
+  fetch: false
+  Headers: false
+  escape: false

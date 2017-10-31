@@ -7,7 +7,6 @@ class GithubService {
 
   buildOptions(method = 'GET') {
     const options = { method: method };
-    // console.log('buildOptions', this.accessToken);
     if (this.accessToken) {
       const headers = new Headers();
       headers.append('Authorization', `token ${this.accessToken}`);
@@ -29,6 +28,11 @@ class GithubService {
   fetchItems(userName, repository) {
     const url = `/repos/${userName}/${repository}/contents`;
     return this._get(url);
+  }
+
+  async fetchItemContent(userName, repository, itemPath) {
+    const item = await this._get(`/repos/${userName}/${repository}/contents/${itemPath}`);
+    return decodeURIComponent(escape(window.atob(item.content)));
   }
 
   async getUser(userName) {

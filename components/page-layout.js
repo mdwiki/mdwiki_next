@@ -57,6 +57,10 @@ export default class PageLayout extends React.Component {
     Router.push('/logout');
   }
 
+  goHome() {
+    Router.push({ pathname: '/', query: { itemName: 'index' }});
+  }
+
   renderStaticSidebar(appStore) {
     return (
       <div className="Sidebar">
@@ -116,7 +120,9 @@ export default class PageLayout extends React.Component {
           <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          <link rel="stylesheet" href="static/markdown.css" />
           <link rel="stylesheet" href="static/styles.css" />
+          <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon" />
         </Head>
         <AppBar className="AppBar">
           <Toolbar>
@@ -124,9 +130,9 @@ export default class PageLayout extends React.Component {
               onClick={() => this.toggleLeftSidebar()}>
               <MenuIcon />
             </IconButton>
-            <Typography type="title" color="inherit" className="AppTitle">
-              <Link href="/"><a>{ this.props.title }</a></Link>
-            </Typography>
+            <Link href="/?itemName=index">
+              <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" />
+            </Link>
             <SearchButton appStore={this.props.appStore} />
             <IconButton title="Connect to a Github repository" color="contrast" aria-label="Connect"
               onClick={() => this.connect(this.props.appStore)} >
@@ -152,6 +158,12 @@ export default class PageLayout extends React.Component {
           :global(.AppTitle > a){
             text-decoration: none;
             color: inherit;
+          }
+
+          .Logo-image {
+            height: 48px;
+            width: 48px;
+            cursor: pointer;
           }
 
           @media (min-width: ${ screensizes.smallTablet }) {
