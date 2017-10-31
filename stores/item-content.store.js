@@ -7,8 +7,6 @@ import HtmlToReact from 'html-to-react';
 import { Parser as HtmlToReactParser } from 'html-to-react';
 import github from './../services/github.service.js';
 
-const keys = new Set();
-
 export default class ItemContentStore {
   @observable isBusy = false;
   @observable path = null;
@@ -50,7 +48,7 @@ export default class ItemContentStore {
       },
       processNode: function (node, children, index) {
         const href = node.attribs.href.substr(1);
-        const buttonElement = React.createElement('button', { className:'link-button', onClick: () => {
+        const buttonElement = React.createElement('button', { className:'Link-button', onClick: () => {
           Router.push({ pathname: '/', query: { name: href } });
         }}, node.children[0].data);
         return buttonElement;

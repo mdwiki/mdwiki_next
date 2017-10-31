@@ -126,12 +126,14 @@ export default class PageLayout extends React.Component {
           <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon" />
         </Head>
         <AppBar className="AppBar">
-          <Toolbar>
+          <Toolbar className="Toolbar">
             <IconButton className="ToggleSidebar-button" color="contrast" aria-label="Menu"
               onClick={() => this.toggleLeftSidebar()}>
               <MenuIcon />
             </IconButton>
-            <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" onClick={() => this.goHome()} />
+            <div className="AppTitle">
+              <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" onClick={() => this.goHome()} />
+            </div>
             <SearchButton appStore={this.props.appStore} />
             <IconButton title="Connect to a Github repository" color="contrast" aria-label="Connect"
               onClick={() => this.connect(this.props.appStore)} >
@@ -159,6 +161,10 @@ export default class PageLayout extends React.Component {
             color: inherit;
           }
 
+          :global(.Toolbar) {
+            padding-left: 0px;
+          }
+
           .Logo-image {
             height: 48px;
             width: 48px;
@@ -172,6 +178,9 @@ export default class PageLayout extends React.Component {
           }
 
           @media (min-width: ${ screensizes.iPadLandscape }) {
+            :global(.Toolbar) {
+              padding-left: 16px;
+            }
           }
         `}</style>
       </div>

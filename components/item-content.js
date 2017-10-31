@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { CircularProgress } from 'material-ui/Progress';
 import github from './../services/github.service.js';
 import ItemContentStore from './../stores/item-content.store.js';
+import { screensizes } from './../common/styles/screensizes.js';
 
 @observer export default class ItemContent extends React.Component {
   static propTypes = {
@@ -22,7 +23,7 @@ import ItemContentStore from './../stores/item-content.store.js';
       this.changeItemContent(this.props.itemName);
     }
 
-    const changeReaction = reaction(
+    reaction(
       () => this.props.appStore.selectedItem,
       itemName => this.changeItemContent(itemName)
     );
@@ -73,13 +74,19 @@ import ItemContentStore from './../stores/item-content.store.js';
             align-items: center;
             background-color: #f5f7fa;
             opacity: 0.7;
-            height: calc(100vh - 100px);
-            width: calc(100vw - 300px);
+            height: calc(100vh - 75px);
+            width: calc(100vw - 20px);
           }
 
           :global(.progress) {
             color: #2196f3;
-          
+          }
+
+          @media (min-width: ${ screensizes.iPadLandscape }) {
+            :global(.ProgressBar-container) {
+              height: calc(100vh - 90px);
+              width: calc(100vw - 300px);
+            }
           }
         `}</style>
       </div>
