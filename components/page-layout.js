@@ -162,7 +162,7 @@ export default class PageLayout extends React.Component {
           }
 
           :global(.Toolbar) {
-            padding-left: 0px;
+            padding-left: 0px !important;
           }
 
           .Logo-image {
@@ -179,7 +179,7 @@ export default class PageLayout extends React.Component {
 
           @media (min-width: ${ screensizes.iPadLandscape }) {
             :global(.Toolbar) {
-              padding-left: 16px;
+              padding-left: 16px !important;
             }
           }
         `}</style>
