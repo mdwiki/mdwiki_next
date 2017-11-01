@@ -9,7 +9,7 @@ const defaultSettings = { user: 'mdwiki', repository: 'wiki' };
 
 class AppStore {
   @observable isServer = false;
-  @observable searchValue = '';
+  @observable searchTerm = '';
   @observable settings = null;
   @observable user = null;
   @observable items = null;
@@ -35,7 +35,7 @@ class AppStore {
 
   @action readFromStorage() {
     this.settings = storage.getObject('settings') || defaultSettings;
-    this.searchValue = storage.get('searchValue');
+    this.searchTerm = storage.get('searchTerm');
     this.user = storage.getObject('user') || { isLoggedIn: false };
   }
 
@@ -44,7 +44,8 @@ class AppStore {
     storage.setObject('settings', this.settings);
   }
 
-  @action startSearch() {
+  @action changeSearchTerm(searchTerm) {
+    this.searchTerm = searchTerm;
   }
 
   @action changeSelectedItem(item) {

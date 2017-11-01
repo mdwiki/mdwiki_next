@@ -35,6 +35,11 @@ class GithubService {
     return decodeURIComponent(escape(window.atob(item.content)));
   }
 
+  search(userName, repository, searchTerm) {
+    const searchUrl = `/search/code?q=${escape(searchTerm)}+in:file+extension:md+repo:${userName}/${repository}`;
+    return this._get(searchUrl);
+  }
+
   async getUser(userName) {
     try {
       const user = await this._get(`/users/${userName}`);

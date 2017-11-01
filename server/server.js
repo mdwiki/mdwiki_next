@@ -15,7 +15,7 @@ const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
 global.host = dev ? `http://localhost:${PORT}` : 'https://www.mdwiki.net';
 
-const PAGE_NAMES = ['_next', 'connect', 'index'];
+const PAGE_NAMES = ['_next', 'index', 'connect', 'search'];
 
 mobxReact.useStaticRendering(true);
 
