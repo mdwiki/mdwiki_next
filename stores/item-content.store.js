@@ -4,7 +4,6 @@ import { action, observable } from 'mobx';
 import { markdown } from 'markdown';
 import cheerio from 'cheerio';
 import HtmlToReact from 'html-to-react';
-import { Parser as HtmlToReactParser } from 'html-to-react';
 import github from './../services/github.service.js';
 
 export default class ItemContentStore {
@@ -24,7 +23,6 @@ export default class ItemContentStore {
     } finally {
       this.isBusy = false;
     }
-
   }
 
   fixLinks(html) {
@@ -36,32 +34,26 @@ export default class ItemContentStore {
     return $.html();
   }
 
-  isValidNode() {
-    return true;
-  }
-
   renderToReact(html) {
     const processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
     const processingInstructions = [{
-      shouldProcessNode: function (node) {
-        return node.attribs && node.attribs.href && node.attribs.href.startsWith('/');
-      },
-      processNode: function (node, children, index) {
+      shouldProcessNode: node => node.attribs && node.attribs.href && node.attribs.href.startsWith('/'),
+      processNode: (node, children, index) => {
         const href = node.attribs.href.substr(1);
-        const buttonElement = React.createElement('button', { className:'Link-button', onClick: () => {
-          Router.push({ pathname: '/', query: { name: href } });
-        }}, node.children[0].data);
+        const buttonElement = React.createElement(
+          'button',
+          { className: 'Link-button', onClick: () => { Router.push({ pathname: '/', query: { name: href } }); } },
+          node.children[0].data
+        );
         return buttonElement;
       }
     }, {
-      shouldProcessNode: () => {
-        return true;
-      },
+      shouldProcessNode: () => true,
       processNode: processNodeDefinitions.processDefaultNode
     }];
 
-    const htmlToReactParser = new HtmlToReactParser();
-    return htmlToReactParser.parseWithInstructions(html, this.isValidNode, processingInstructions);
+    const htmlToReactParser = new HtmlToReact.Parser();
+    return htmlToReactParser.parseWithInstructions(html, () => true, processingInstructions);
   }
 }
 

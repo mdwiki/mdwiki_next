@@ -19,7 +19,8 @@ const ProgressBar = () => (
       :global(.progress) {
         color: #2196f3;
       }
-    `}</style>
+    `}
+    </style>
   </div>
 );
 

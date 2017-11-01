@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import Router from 'next/router';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
-import github from './../services/github.service.js';
 import { initAppStore } from './../stores/app.store.js';
 import ConnectStore from './../stores/connect.store.js';
 import PageLayout from './../components/page-layout.js';
@@ -12,13 +11,10 @@ const DELAY_TYPE_TIMEOUT = 1000;
 
 @observer export default class ConnectPage extends React.Component {
   static async getInitialProps({ req, query }) {
-    const isServer = !!req;
-    const userAgent = isServer ? req.headers['user-agent'] : window.navigator.userAgent;
     const user = query.user;
     const repository = query.repository;
 
     return {
-      userAgent,
       user,
       repository
     };
@@ -47,7 +43,6 @@ const DELAY_TYPE_TIMEOUT = 1000;
     this.typeTimeout = setTimeout(() => {
       this.connectStore.validate(this.connectStore.user, this.connectStore.repository);
     }, DELAY_TYPE_TIMEOUT);
-
   }
 
   onUserChanged(user) {
@@ -67,7 +62,7 @@ const DELAY_TYPE_TIMEOUT = 1000;
 
   render() {
     return (
-      <PageLayout userAgent={this.props.userAgent} appStore={this.appStore} showSidebar={false}>
+      <PageLayout appStore={this.appStore} showSidebar={false}>
         <form className="Connect-form" autoComplete="off" noValidate>
           <TextField
             id="user"
@@ -88,7 +83,8 @@ const DELAY_TYPE_TIMEOUT = 1000;
               raised
               color="primary"
               disabled={!(this.connectStore.userIsValid && this.connectStore.repositoryIsValid)}
-              onClick={() => this.connectTo(this.connectStore.user, this.connectStore.repository)}>
+              onClick={() => this.connectTo(this.connectStore.user, this.connectStore.repository)}
+            >
               Connect
             </Button>
           </div>
@@ -104,7 +100,8 @@ const DELAY_TYPE_TIMEOUT = 1000;
           .Connect-form > :global(div) {
             margin-top: 15px;
           }
-        `}</style>
+        `}
+        </style>
       </PageLayout>
     );
   }

@@ -31,14 +31,19 @@ import SearchIcon from 'material-ui-icons/Search';
   render() {
     return (
       <div className="Search-wrapper">
-        <IconButton className="Search-button" color="contrast"
-          onClick={() => this.onSearchClicked()} >
+        <IconButton
+          className="Search-button"
+          color="contrast"
+          onClick={() => this.onSearchClicked()}
+        >
           <SearchIcon />
         </IconButton>
-        <input placeholder="Search..."
+        <input
+          placeholder="Search..."
           value={this.props.appStore.searchTerm}
-          onChange={e => this.changeSearchTerm(e.target.value) }
-          onKeyDown={e => this.onInputKeydown(e) } />
+          onChange={e => this.changeSearchTerm(e.target.value)}
+          onKeyDown={e => this.onInputKeydown(e)}
+        />
 
         <style jsx> {`
           input {
@@ -87,7 +92,8 @@ import SearchIcon from 'material-ui-icons/Search';
             }
           }
 
-        `}</style>
+        `}
+        </style>
       </div>
 
     );

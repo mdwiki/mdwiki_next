@@ -10,12 +10,8 @@ import ProgressBar from './../components/progress-bar.js';
 const DELAY_TYPE_TIMEOUT = 1000;
 
 @observer export default class SearchPage extends React.Component {
-  static getInitialProps({ req, query }) {
-    const isServer = !!req;
-    const userAgent = isServer ? req.headers['user-agent'] : window.navigator.userAgent;
-
+  static getInitialProps({ query }) {
     return {
-      userAgent,
       searchTerm: query.searchTerm
     };
   }
@@ -68,7 +64,7 @@ const DELAY_TYPE_TIMEOUT = 1000;
   }
 
   navigateTo(itemName) {
-    Router.push({ pathname: '/', query: { name: itemName }});
+    Router.push({ pathname: '/', query: { name: itemName } });
   }
 
   renderSearchResultItem(item) {
@@ -88,7 +84,6 @@ const DELAY_TYPE_TIMEOUT = 1000;
 
     return (
       <PageLayout
-        userAgent={this.props.userAgent}
         appStore={this.appStore}
         showSidebar={false}
       >
@@ -101,7 +96,10 @@ const DELAY_TYPE_TIMEOUT = 1000;
           </div>
           <div className="SearchPageResult-container">
             <ul>
-              { searchStore.searchResult && searchStore.searchResult.items.map(s => this.renderSearchResultItem(s))}
+              {
+                searchStore.searchResult &&
+                searchStore.searchResult.items.map(s => this.renderSearchResultItem(s))
+              }
             </ul>
           </div>
         </div>
@@ -131,7 +129,8 @@ const DELAY_TYPE_TIMEOUT = 1000;
           ul {
             list-style: inherit;
           }
-        `}</style>
+        `}
+        </style>
       </PageLayout>
     );
   }

@@ -2,13 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Router from 'next/router';
-import Link from 'next/link';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import AccountIcon from 'material-ui-icons/AccountCircle';
-import Typography from 'material-ui/Typography';
 import Drawer from 'material-ui/Drawer';
 import classNames from 'classnames';
 
@@ -21,7 +19,6 @@ import { screensizes } from './../common/styles/screensizes.js';
 export default class PageLayout extends React.Component {
   static propTypes = {
     children: PropTypes.any.isRequired,
-    userAgent: PropTypes.string.isRequired,
     appStore: PropTypes.object.isRequired,
     title: PropTypes.string,
     showSidebar: PropTypes.bool
@@ -58,7 +55,7 @@ export default class PageLayout extends React.Component {
   }
 
   goHome() {
-    Router.push({ pathname: '/', query: { itemName: 'index.md' }});
+    Router.push({ pathname: '/', query: { itemName: 'index.md' } });
     this.props.appStore.selectedItem = 'index.md';
   }
 
@@ -72,12 +69,14 @@ export default class PageLayout extends React.Component {
 
   renderMobileSidebar(appStore) {
     return (
-      <Drawer className="LeftSidebar"
+      <Drawer
+        className="LeftSidebar"
         type="temporary"
         anchor="left"
         open={this.state.showLeftSidebar}
         onRequestClose={() => this.toggleLeftSidebar()}
-        onClick={() => this.toggleLeftSidebar()}>
+        onClick={() => this.toggleLeftSidebar()}
+      >
         <ItemList appStore={appStore} />
       </Drawer>
     );
@@ -85,8 +84,10 @@ export default class PageLayout extends React.Component {
 
   renderLoginButton() {
     return (
-      <IconButton title="Login" color="contrast" aria-label="Login"
-        onClick={() => this.login()}>
+      <IconButton
+        title="Login" color="contrast" aria-label="Login"
+        onClick={() => this.login()}
+      >
         <AccountIcon />
       </IconButton>
     );
@@ -97,10 +98,11 @@ export default class PageLayout extends React.Component {
 
     return (
       <IconButton
-        title={ `Logout ${user.name}`}
+        title={`Logout ${user.name}`}
         color="contrast"
         aria-label="Logout"
-        onClick={() => this.logout()}>
+        onClick={() => this.logout()}
+      >
         <UserIcon userName={user.name} avatarUrl={user.avatarUrl} />
       </IconButton>
     );
@@ -111,14 +113,12 @@ export default class PageLayout extends React.Component {
   }
 
   render() {
-    const userAgent= this.props.userAgent;
-
     return (
       <div className={classNames('Main-container', { 'show-sidebar': this.props.showSidebar })}>
         <Head>
           <title>{this.props.title}</title>
-          <meta charSet="utf-8"/>
-          <meta name="viewport" content="initial-scale=1.0, width=device-width"/>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
           <link rel="stylesheet" href="static/styles/markdown.css" />
@@ -127,16 +127,26 @@ export default class PageLayout extends React.Component {
         </Head>
         <AppBar className="AppBar">
           <Toolbar className="Toolbar">
-            <IconButton className="ToggleSidebar-button" color="contrast" aria-label="Menu"
-              onClick={() => this.toggleLeftSidebar()}>
+            <IconButton
+              className="ToggleSidebar-button"
+              color="contrast"
+              aria-label="Menu"
+              onClick={() => this.toggleLeftSidebar()}
+            >
               <MenuIcon />
             </IconButton>
             <div className="AppTitle">
-              <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" onClick={() => this.goHome()} />
+              <button className="Logo-button" onClick={() => this.goHome()}>
+                <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" />
+              </button>
             </div>
             <SearchButton appStore={this.props.appStore} />
-            <IconButton title="Connect to a Github repository" color="contrast" aria-label="Connect"
-              onClick={() => this.connect(this.props.appStore)} >
+            <IconButton
+              title="Connect to a Github repository"
+              color="contrast"
+              aria-label="Connect"
+              onClick={() => this.connect(this.props.appStore)}
+            >
               <GithubIcon />
             </IconButton>
             {!this.isUserLoggedIn() && this.renderLoginButton()}
@@ -171,6 +181,15 @@ export default class PageLayout extends React.Component {
             cursor: pointer;
           }
 
+          .Logo-button {
+            background: none;
+            border: none;
+          }
+
+          .Logo-button:focus {
+            outline: none;
+          }
+
           @media (min-width: ${ screensizes.smallTablet }) {
             :global(.AppTitle) {
               flex: 0;
@@ -182,7 +201,8 @@ export default class PageLayout extends React.Component {
               padding-left: 16px !important;
             }
           }
-        `}</style>
+        `}
+        </style>
       </div>
     );
   }

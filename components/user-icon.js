@@ -11,7 +11,8 @@ const UserIcon = ({ userName, avatarUrl }) => (
         border-radius: 15px;
         transform: translateY(4px);
       }
-    `}</style>
+    `}
+    </style>
   </div>
 );
 

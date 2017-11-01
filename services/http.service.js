@@ -9,10 +9,11 @@ class HttpService {
   }
 
   async get(url) {
-    if (!url.startsWith('http')) {
-      url = this.getHostAddress() + url;
+    let completeUrl = url;
+    if (!completeUrl.startsWith('http')) {
+      completeUrl = this.getHostAddress() + completeUrl;
     }
-    const response = await fetch(url);
+    const response = await fetch(completeUrl);
     return response.json();
   }
 }

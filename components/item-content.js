@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import github from './../services/github.service.js';
 import ItemContentStore from './../stores/item-content.store.js';
 import { screensizes } from './../common/styles/screensizes.js';
 import ProgressBar from './progress-bar.js';
@@ -30,7 +29,7 @@ import ProgressBar from './progress-bar.js';
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.itemName != this.props.itemName) {
+    if (nextProps.itemName !== this.props.itemName) {
       this.changeItemContent(nextProps.itemName);
     }
   }
@@ -49,7 +48,7 @@ import ProgressBar from './progress-bar.js';
   changeItemContent(itemName) {
     const settings = this.props.appStore.settings;
     this.itemContentStore.changeContent(settings.user, settings.repository, itemName);
-    this.updateLocation(itemName.substr(0, itemName.length -3));
+    this.updateLocation(itemName.substr(0, itemName.length - 3));
   }
 
   render() {
@@ -80,10 +79,10 @@ import ProgressBar from './progress-bar.js';
               width: calc(100vw - 300px);
             }
           }
-        `}</style>
+        `}
+        </style>
       </div>
     );
   }
-
 }
 

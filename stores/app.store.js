@@ -55,7 +55,6 @@ class AppStore {
   @action setItems(items) {
     this.items = items;
   }
-
 }
 
 export function initAppStore(user) {

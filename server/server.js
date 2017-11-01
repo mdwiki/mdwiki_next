@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const next = require('next');
+const nextjs = require('next');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
@@ -9,7 +9,7 @@ const fetch = require('node-fetch');
 const { parse } = require('url');
 
 const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
+const app = nextjs({ dev });
 const handle = app.getRequestHandler();
 const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
@@ -32,8 +32,8 @@ app.prepare().then(() => {
   server.keys = ['7pb0HHz9Mwq5yZfw'];
   server.use(session({}, server));
 
-  require('./auth.js');
-  const passport = require('koa-passport');
+  require('./auth.js'); // eslint-disable-line
+  const passport = require('koa-passport'); // eslint-disable-line
   server.use(passport.initialize());
   server.use(passport.session());
 
@@ -49,7 +49,8 @@ app.prepare().then(() => {
 
   router.get('/auth/github', passport.authenticate('github'));
 
-  router.get('/auth/github/callback',
+  router.get(
+    '/auth/github/callback',
     passport.authenticate('github', { failureRedirect: '/' }),
     (ctx) => {
       if (ctx.session.passport && ctx.session.passport.user) {
@@ -75,7 +76,7 @@ app.prepare().then(() => {
 
   router.get('*', async ctx => {
     const parsedUrl = parse(ctx.req.url);
-    const { pathname, query } = parsedUrl;
+    const { pathname } = parsedUrl;
     const pageName = getPageName(pathname);
     const isExistingPage = PAGE_NAMES.some(p => p === pageName);
 

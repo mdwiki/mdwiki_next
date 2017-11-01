@@ -1,12 +1,10 @@
 import React from 'react';
-import http from './../services/http.service.js';
 import Router from 'next/router';
 import { initAppStore } from './../stores/app.store.js';
 import github from './../services/github.service.js';
 
 export default class LoginPage extends React.Component {
-  static async getInitialProps({ req, query }) {
-    const isServer = !!req;
+  static async getInitialProps({ query }) {
     const user = query.user;
     const accessToken = query.accessToken;
 

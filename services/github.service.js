@@ -6,7 +6,7 @@ class GithubService {
   }
 
   buildOptions(method = 'GET') {
-    const options = { method: method };
+    const options = { method };
     if (this.accessToken) {
       const headers = new Headers();
       headers.append('Authorization', `token ${this.accessToken}`);
@@ -44,8 +44,9 @@ class GithubService {
     try {
       const user = await this._get(`/users/${userName}`);
       return user;
-    } catch(error) {
+    } catch (error) {
       console.log('Error while fetching user', userName);
+      return undefined;
     }
   }
 
@@ -53,8 +54,9 @@ class GithubService {
     try {
       const user = await this._get(`/repos/${userName}/${repositoryName}`);
       return user;
-    } catch(error) {
+    } catch (error) {
       console.log('Error while fetching repository', userName, repositoryName);
+      return undefined;
     }
   }
 }

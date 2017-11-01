@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Router from 'next/router';
 import { initAppStore } from './../stores/app.store.js';
 

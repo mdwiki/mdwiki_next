@@ -6,7 +6,7 @@ env:
 plugins:
   - react
 extends: 
-  - 'eslint:recommended'
+  - 'eslint-config-airbnb'
   - 'plugin:react/recommended'
 rules:
   indent:
@@ -24,14 +24,42 @@ rules:
   no-console:
     - off
   no-unused-vars:
-    - off
+    - error
     - vars: all
-      args: after-used
+      args: none
+  no-use-before-define:
+    - off
+  class-methods-use-this:
+    - off
+  comma-dangle:
+    - off
+  arrow-parens:
+    - off
+  no-underscore-dangle:
+    - off
+  template-curly-spacing:
+    - off
+  prefer-destructuring:
+    - off
+  import/prefer-default-export:
+    - off
+  import/extensions:
+    - off
   no-trailing-spaces:
     - 2
   react/display-name:
     - off
   react/prop-types:
+    - off
+  react/jsx-filename-extension:
+    - 1
+    - extensions:
+      - ".js"
+  react/jsx-max-props-per-line:
+    - off
+  react/forbid-prop-types:
+    - off
+  react/sort-comp:
     - off
 
 globals:

@@ -57,9 +57,10 @@ const EXCLUDE_ITEMS = ['index.md', 'readme.md'];
     return (
       <div key={item.path}>
         { this.renderSubHeader(item.name) }
-        <ListItem button={true}>
-          <ListItemText className="ItemNameText"
-            primary={item.name.substr(0, item.name.length -3)}
+        <ListItem button>
+          <ListItemText
+            className="ItemNameText"
+            primary={item.name.substr(0, item.name.length - 3)}
             onClick={() => this.onItemClick(item)}
           />
         </ListItem>
@@ -87,7 +88,8 @@ const EXCLUDE_ITEMS = ['index.md', 'readme.md'];
             font-weight: bold;
             font-size: 18px;
           }
-        `}</style>
+        `}
+        </style>
       </List>
     );
   }

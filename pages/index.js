@@ -5,12 +5,8 @@ import PageLayout from './../components/page-layout.js';
 import ItemContent from './../components/item-content.js';
 
 @observer export default class IndexPage extends React.Component {
-  static async getInitialProps({ req, query }) {
-    const isServer = !!req;
-    const userAgent = isServer ? req.headers['user-agent'] : window.navigator.userAgent;
-
+  static async getInitialProps({ query }) {
     return {
-      userAgent,
       itemName: query.name
     };
   }
@@ -35,9 +31,7 @@ import ItemContent from './../components/item-content.js';
     }
 
     return (
-      <PageLayout
-        userAgent={this.props.userAgent}
-        appStore={this.appStore}>
+      <PageLayout appStore={this.appStore}>
         <ItemContent appStore={this.appStore} itemName={itemName} />
       </PageLayout>
     );
