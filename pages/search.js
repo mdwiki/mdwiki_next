@@ -5,6 +5,7 @@ import Router from 'next/router';
 import { initAppStore } from './../stores/app.store.js';
 import SearchStore from './../stores/search.store.js';
 import PageLayout from './../components/page-layout.js';
+import ProgressBar from './../components/progress-bar.js';
 
 const DELAY_TYPE_TIMEOUT = 1000;
 
@@ -91,6 +92,7 @@ const DELAY_TYPE_TIMEOUT = 1000;
         appStore={this.appStore}
         showSidebar={false}
       >
+        {searchStore.isBusy && <ProgressBar />}
         <div className="markdown-body SearchPage-container">
           <h1>SearchResult</h1>
           <div className="SearchPageInput-container">
@@ -124,6 +126,10 @@ const DELAY_TYPE_TIMEOUT = 1000;
 
           .SearchPageResult-container {
             margin: 10px;
+          }
+
+          ul {
+            list-style: inherit;
           }
         `}</style>
       </PageLayout>

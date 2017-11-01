@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { CircularProgress } from 'material-ui/Progress';
 import github from './../services/github.service.js';
 import ItemContentStore from './../stores/item-content.store.js';
 import { screensizes } from './../common/styles/screensizes.js';
+import ProgressBar from './progress-bar.js';
 
 @observer export default class ItemContent extends React.Component {
   static propTypes = {
@@ -52,18 +52,10 @@ import { screensizes } from './../common/styles/screensizes.js';
     this.updateLocation(itemName.substr(0, itemName.length -3));
   }
 
-  renderProgress() {
-    return (
-      <div className="ProgressBar-container">
-        <CircularProgress className="progress" size={50} />
-      </div>
-    );
-  }
-
   render() {
     return (
       <div className="markdown-body">
-        {this.itemContentStore.isBusy && this.renderProgress()}
+        {this.itemContentStore.isBusy && <ProgressBar />}
         {this.itemContentStore.markdownAsReact}
 
         <style jsx> {`
