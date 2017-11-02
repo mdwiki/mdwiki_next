@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import Router from 'next/router';
 import IconButton from 'material-ui/IconButton';
 import SearchIcon from 'material-ui-icons/Search';
+import { screensizes } from './../common/styles/screensizes.js';
 
 @observer export default class SearchButton extends React.Component {
   static propTypes = {
@@ -50,7 +51,7 @@ import SearchIcon from 'material-ui-icons/Search';
             display: none;
           }
 
-          @media (min-width: 510px) {
+          @media (min-width: ${ screensizes.smallTablet}) {
             .Search-wrapper {
               border-radius: 2px;
               background-color: rgba(255,255,255,.15);

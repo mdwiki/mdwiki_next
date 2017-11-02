@@ -2,10 +2,14 @@ import React from 'react';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import Router from 'next/router';
+import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
+import SearchIcon from 'material-ui-icons/Search';
 import { initAppStore } from './../stores/app.store.js';
 import SearchStore from './../stores/search.store.js';
 import PageLayout from './../components/page-layout.js';
 import ProgressBar from './../components/progress-bar.js';
+import { screensizes } from './../common/styles/screensizes.js';
 
 const DELAY_TYPE_TIMEOUT = 1000;
 
@@ -34,11 +38,6 @@ const DELAY_TYPE_TIMEOUT = 1000;
       this.forceUpdate(); // HACK - I don't know why this is necessary
     }
 
-    if (window) {
-      window.APP_STORE = this.appStore;
-      window.SEARCH_STORE = this.searchStore;
-    }
-
     reaction(
       () => this.appStore.searchTerm,
       searchTerm => this.startSearchDelayed(searchTerm)
@@ -53,6 +52,10 @@ const DELAY_TYPE_TIMEOUT = 1000;
     this.typeTimeout = setTimeout(() => {
       this.startSearch(searchTerm);
     }, DELAY_TYPE_TIMEOUT);
+  }
+
+  onSearchTermChanged(searchTerm) {
+    this.appStore.searchTerm = searchTerm;
   }
 
   async startSearch(searchTerm) {
@@ -89,10 +92,24 @@ const DELAY_TYPE_TIMEOUT = 1000;
       >
         {searchStore.isBusy && <ProgressBar />}
         <div className="markdown-body SearchPage-container">
-          <h1>SearchResult</h1>
-          <div className="SearchPageInput-container">
+          <h1>Search</h1>
+          <div className="SearchPageValue-container">
             <span className="SearchTerm-label">You searched for:</span>
             <span className="SearchTerm-value">{searchStore.searchTerm}</span>
+          </div>
+          <div className="SearchPageInput-container">
+            <TextField
+              id="searchTerm"
+              value={this.appStore.searchTerm}
+              onChange={(e) => this.onSearchTermChanged(e.target.value)}
+            />
+            <IconButton
+              className="Search-button"
+              aria-label="Search"
+              onClick={() => this.startSearch(this.appStore.searchTerm)}
+            >
+              <SearchIcon />
+            </IconButton>
           </div>
           <div className="SearchPageResult-container">
             <ul>
@@ -105,12 +122,21 @@ const DELAY_TYPE_TIMEOUT = 1000;
         </div>
 
         <style jsx> {`
+          h1 {
+            display: none;
+          }
+
           .SearchPage-container {
             margin: 10px;
           }
 
+          .SearchPageValue-container {
+            display: none;
+          }
+
           .SearchPageInput-container {
-            margin: 10px;
+            display: flex;
+            margin: 10px 10px 20px 10px;
           }
 
           .SearchTerm-label {
@@ -122,12 +148,33 @@ const DELAY_TYPE_TIMEOUT = 1000;
             margin-left: 10px;
           }
 
+          :global(.Search-button) {
+            height: 32px;
+            width: 48px;
+          
+          }
+
           .SearchPageResult-container {
             margin: 10px;
           }
 
           ul {
             list-style: inherit;
+          }
+
+          @media (min-width: ${ screensizes.smallTablet }) {
+            h1 {
+              display: block;
+            }
+
+            .SearchPageValue-container {
+              display: block;
+              margin: 10px;
+            }
+
+            .SearchPageInput-container {
+              display: none;
+            }
           }
         `}
         </style>
