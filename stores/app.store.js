@@ -52,8 +52,37 @@ class AppStore {
     this.selectedItem = item;
   }
 
+  _compareByName(item1, item2) {
+    return item1.name.localeCompare(item2.name);
+  }
+
   @action setItems(items) {
+    items.sort(this._compareByName);
     this.items = items;
+  }
+
+  @action addItem(item) {
+    if (item.path === 'index.md') {
+      return; // The index page we wont show in the list
+    }
+
+    const items = this.items.slice();
+    items.push(item);
+    this.setItems(items);
+  }
+
+  @action removeItem(itemPath) {
+    const items = this.items.slice();
+    const itemIndex = items.findIndex(i => i.path === itemPath);
+
+    if (itemIndex >= 0) {
+      items.splice(itemIndex, 1);
+      this.setItems(items);
+    }
+  }
+
+  isLoggedIn() {
+    return this.user && this.user.isLoggedIn;
   }
 }
 
