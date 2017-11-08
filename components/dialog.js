@@ -39,6 +39,7 @@ function Transition(props) {
         className="NewEntryName-input"
         value={store.value}
         error={!store.hasValue}
+        onFocus={(e) => e.target.select()}
         onKeyDown={e => this.onNewEntryNameKeydown(e)}
         onChange={(e) => store.changeValue(e.target.value)}
       />
