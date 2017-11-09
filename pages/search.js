@@ -38,10 +38,16 @@ const DELAY_TYPE_TIMEOUT = 1000;
       this.forceUpdate(); // HACK - I don't know why this is necessary
     }
 
-    reaction(
+    this.unregisterReaction = reaction(
       () => this.appStore.searchTerm,
       searchTerm => this.startSearchDelayed(searchTerm)
     );
+  }
+
+  componentWillUnmount() {
+    if (this.unregisterReaction) {
+      this.unregisterReaction();
+    }
   }
 
   startSearchDelayed(searchTerm) {

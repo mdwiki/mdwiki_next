@@ -22,10 +22,16 @@ import ItemContentToolbar from './item-content-toolbar.js';
       this.changeItemContent(this.props.itemName);
     }
 
-    reaction(
+    this.unregisterReaction = reaction(
       () => this.props.appStore.selectedItem,
       itemName => this.changeItemContent(itemName)
     );
+  }
+
+  componentWillUnmount() {
+    if (this.unregisterReaction) {
+      this.unregisterReaction();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
