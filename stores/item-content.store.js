@@ -14,17 +14,48 @@ export default class ItemContentStore {
   @observable markdownAsReact = null;
   @observable isInEditMode = false;
 
-  @action async changeContent(user, repository, itemName) {
+  @action async changeContent(user, repository, itemPath) {
     this.isBusy = true;
 
     try {
-      this.item = await github.fetchItem(user, repository, itemName);
+      this.item = await github.fetchItem(user, repository, itemPath);
+      this.markdownText = this.item.content;
+      this.markdownAsHtml = this.fixLinks(markdown.toHTML(this.item.content));
+      this.markdownAsReact = this.renderToReact(this.markdownAsHtml);
+    } finally {
+      this.isBusy = false;
+      this.isInEditMode = false;
+    }
+  }
+
+  @action async updateContent(markdownText) {
+    this.markdownText = markdownText;
+    this.markdownAsHtml = this.fixLinks(markdown.toHTML(this.item.content));
+  }
+
+  @action async saveContent(user, repository, commitMessage) {
+    this.isBusy = true;
+
+    try {
+      await github.putItem(
+        user,
+        repository,
+        this.item.path,
+        this.markdownText,
+        commitMessage,
+        this.item.sha
+      );
+
       this.markdownText = this.item.content;
       this.markdownAsHtml = this.fixLinks(markdown.toHTML(this.item.content));
       this.markdownAsReact = this.renderToReact(this.markdownAsHtml);
     } finally {
       this.isBusy = false;
     }
+  }
+
+  @action toggleEditMode() {
+    this.isInEditMode = !this.isInEditMode;
   }
 
   fixLinks(html) {
@@ -53,6 +84,7 @@ export default class ItemContentStore {
   async deleteItem(user, repository) {
     const commitMessage = `Delete page ${this.item.name}`;
     await github.deleteItem(user, repository, this.item.path, commitMessage, this.item.sha);
+    navigator.goHome();
   }
 
   renderToReact(html) {

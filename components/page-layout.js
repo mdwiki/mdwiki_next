@@ -121,6 +121,7 @@ export default class PageLayout extends React.Component {
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          <link rel="stylesheet" href="static/styles/simplemde.min.css" />
           <link rel="stylesheet" href="static/styles/markdown.css" />
           <link rel="stylesheet" href="static/styles/styles.css" />
           <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon" />

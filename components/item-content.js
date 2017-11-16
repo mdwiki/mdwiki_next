@@ -2,9 +2,35 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
+import SimpleMDE from 'react-simplemde-editor';
 import ItemContentStore from './../stores/item-content.store.js';
 import ProgressBar from './progress-bar.js';
 import ItemContentToolbar from './item-content-toolbar.js';
+
+const SimpleMDEOptions = {
+  spellChecker: false,
+  status: false,
+  previewRender: false,
+  autofocus: true,
+  toolbar: [
+    'bold',
+    'italic',
+    'strikethrough',
+    'heading',
+    '|',
+    'horizontal-rule',
+    'quote',
+    'unordered-list',
+    'ordered-list',
+    '|',
+    'link',
+    'image',
+    'code',
+    '|',
+    'preview',
+    'guide'
+  ]
+};
 
 @observer export default class ItemContent extends React.Component {
   static propTypes = {
@@ -69,6 +95,37 @@ import ItemContentToolbar from './item-content-toolbar.js';
     this.props.appStore.addItem(this.itemContentStore.item);
   }
 
+  async onSaveCurrentItem(commitMessage) {
+    const { settings } = this.props.appStore;
+    await this.itemContentStore.saveContent(
+      settings.user,
+      settings.repository,
+      commitMessage
+    );
+
+    this.itemContentStore.toggleEditMode();
+
+    await this.itemContentStore.changeContent(
+      settings.user,
+      settings.repository,
+      this.itemContentStore.item.path
+    );
+  }
+
+  onBeforeSaveItem() {
+    let defaultCommitMessage;
+
+    if (this.simpleMDE) {
+      defaultCommitMessage = this.simpleMDE.simplemde.codemirror.getSelection();
+    }
+
+    if (!defaultCommitMessage) {
+      defaultCommitMessage = `Some changes for ${this.itemContentStore.item.name}`;
+    }
+
+    return defaultCommitMessage;
+  }
+
   async onDeleteCurrentItem() {
     this.props.appStore.removeItem(this.itemContentStore.item.path);
 
@@ -78,22 +135,72 @@ import ItemContentToolbar from './item-content-toolbar.js';
     await this.changeItemContent('index.md');
   }
 
+  renderEditor() {
+    if (!this.itemContentStore.isInEditMode) {
+      return null;
+    }
+
+    return (
+      <SimpleMDE
+        ref={simpleMDE => this.simpleMDE = simpleMDE} // eslint-disable-line no-return-assign
+        onChange={markdownText => this.itemContentStore.updateContent(markdownText)}
+        value={this.itemContentStore.markdownText}
+        options={SimpleMDEOptions}
+      />
+    );
+  }
+
+  renderItemContent() {
+    if (this.itemContentStore.isInEditMode) {
+      return null;
+    }
+
+    return (
+      <div className="Markdown-container markdown-body">
+        { this.itemContentStore.markdownAsReact }
+        <style jsx> {`
+          .Markdown-container {
+            overflow-y: auto;
+            height: 100vh;
+          }
+        `}
+        </style>
+      </div>
+    );
+  }
+
+  renderToolbar() {
+    if (!this.props.appStore.isLoggedIn()) {
+      return null;
+    }
+
+    return (
+      <ItemContentToolbar
+        itemContentStore={this.itemContentStore}
+        deleteItem={() => this.onDeleteCurrentItem()}
+        createItem={itemName => this.onCreateNewItem(itemName)}
+        beforeSaveItem={() => this.onBeforeSaveItem()}
+        saveItem={commitMessage => this.onSaveCurrentItem(commitMessage)}
+      />
+    );
+  }
+
   render() {
     return (
-      <div className="markdown-body">
+      <div className="ItemContent-container">
         {this.itemContentStore.isBusy && <ProgressBar />}
-        {
-          this.props.appStore.isLoggedIn() &&
-          <ItemContentToolbar
-            isInEditMode={this.itemContentStore.isInEditMode}
-            deleteCurrentItem={() => this.onDeleteCurrentItem()}
-            createNewItem={itemName => this.onCreateNewItem(itemName)}
-          />
-        }
-        {this.itemContentStore.markdownAsReact}
+
+        <div>
+          {this.renderToolbar()}
+        </div>
+
+        {this.renderItemContent()}
+        {this.renderEditor()}
+
         <style jsx> {`
-          .markdown-body {
-            margin-top: -70px;
+          :global(.ItemContent-container) {
+            height: calc(100vh - 84px);
+            overflow-y: hidden;
           }
         `}
         </style>

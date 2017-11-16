@@ -6,6 +6,8 @@ import Tooltip from 'material-ui/Tooltip';
 import AddIcon from 'material-ui-icons/Add';
 import EditIcon from 'material-ui-icons/Edit';
 import DeleteIcon from 'material-ui-icons/Delete';
+import SaveIcon from 'material-ui-icons/Save';
+import CancelIcon from 'material-ui-icons/Cancel';
 import { screensizes } from './../common/styles/screensizes.js';
 import Dialog from './dialog.js';
 import DialogStore from './../stores/dialog.store.js';
@@ -14,13 +16,16 @@ const Aux = props => props.children;
 
 @observer export default class ItemContentToolbarComponent extends React.Component {
   static propTypes = {
-    isInEditMode: PropTypes.bool.isRequired,
-    deleteCurrentItem: PropTypes.func.isRequired,
-    createNewItem: PropTypes.func.isRequired
+    itemContentStore: PropTypes.object.isRequired,
+    deleteItem: PropTypes.func.isRequired,
+    createItem: PropTypes.func.isRequired,
+    saveItem: PropTypes.func.isRequired,
+    beforeSaveItem: PropTypes.func.isRequired
   };
 
   newEntryDialogStore = new DialogStore(true);
   deleteEntryDialogStore = new DialogStore();
+  saveEntryDialogStore = new DialogStore(true);
 
   onNewEntryNameKeydown(e) {
     const KEY_CODE_ENTER = 13;
@@ -43,8 +48,7 @@ const Aux = props => props.children;
 
   onCreateNewEntryDialogClosed() {
     if (this.newEntryDialogStore.isConfirmed) {
-      const itemName = this.newEntryDialogStore.value;
-      this.props.createNewItem(itemName);
+      this.props.createItem(this.newEntryDialogStore.value);
     }
   }
 
@@ -61,29 +65,61 @@ const Aux = props => props.children;
 
   onDeleteEntryDialogClosed() {
     if (this.deleteEntryDialogStore.isConfirmed) {
-      this.props.deleteCurrentItem();
+      this.props.deleteItem();
     }
+  }
+
+  renderSaveEntryDialog() {
+    return (
+      <Dialog
+        title="Save changes"
+        text="Please enter a commit message for your changes"
+        store={this.saveEntryDialogStore}
+        dialogClosed={() => this.onSaveEntryDialogClosed()}
+      />
+    );
+  }
+
+  onSaveEntryDialogClosed() {
+    if (this.saveEntryDialogStore.isConfirmed) {
+      this.props.saveItem(this.saveEntryDialogStore.value);
+    }
+  }
+
+  onEditButtonClicked() {
+    this.props.itemContentStore.toggleEditMode();
+  }
+
+  onCancelEditButtonClicked() {
+    this.props.itemContentStore.toggleEditMode();
+  }
+
+  onSaveButtonClicked() {
+    const defaultCommitMessage = this.props.beforeSaveItem();
+
+    this.saveEntryDialogStore.openDialog(defaultCommitMessage);
   }
 
   renderEditModeButtons() {
     return (
       <Aux>
-        <Tooltip title="Add">
+        {this.renderSaveEntryDialog()}
+        <Tooltip title="Cancel">
           <IconButton
             className="Toolbar-button"
-            aria-label="Add"
+            aria-label="Cancel"
+            onClick={() => this.onCancelEditButtonClicked()}
           >
-            <AddIcon />
+            <CancelIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Edit">
-          <IconButton className="Toolbar-button" aria-label="Edit">
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete">
-          <IconButton className="Toolbar-button" aria-label="Delete">
-            <DeleteIcon />
+        <Tooltip title="Save">
+          <IconButton
+            className="Toolbar-button"
+            aria-label="Save"
+            onClick={() => this.onSaveButtonClicked()}
+          >
+            <SaveIcon />
           </IconButton>
         </Tooltip>
       </Aux>
@@ -95,6 +131,7 @@ const Aux = props => props.children;
       <Aux>
         {this.renderNewEntryDialog()}
         {this.renderDeleteEntryDialog()}
+
         <Tooltip title="Add">
           <IconButton
             className="Toolbar-button"
@@ -105,7 +142,11 @@ const Aux = props => props.children;
           </IconButton>
         </Tooltip>
         <Tooltip title="Edit">
-          <IconButton className="Toolbar-button" aria-label="Edit">
+          <IconButton
+            className="Toolbar-button"
+            aria-label="Edit"
+            onClick={() => this.onEditButtonClicked()}
+          >
             <EditIcon />
           </IconButton>
         </Tooltip>
@@ -123,25 +164,29 @@ const Aux = props => props.children;
   }
 
   render() {
+    if (!this.props.itemContentStore) {
+      return null;
+    }
+
     return (
       <div className="ItemContent-toolbar">
-        {this.renderNewEntryDialog()}
-
-        {this.props.isInEditMode && this.renderEditModeButtons()}
-        {!this.props.isInEditMode && this.renderNonEditModeButtons()}
+        {this.props.itemContentStore.isInEditMode && this.renderEditModeButtons()}
+        {!this.props.itemContentStore.isInEditMode && this.renderNonEditModeButtons()}
 
         <style jsx> {`
           .ItemContent-toolbar {
-            position: sticky;
-            top: 0px;
-            display: flex;
-            justify-content: flex-end;
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 99;
           }
 
           :global(.Toolbar-button) {
             width: 32px;
             height: 32px;
+            color: #005cc5;
           }
+
           @media (min-width: ${ screensizes.smallTablet }) {
             :global(.Toolbar-button) {
               width: 48px;
