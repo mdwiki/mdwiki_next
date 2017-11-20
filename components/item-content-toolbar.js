@@ -17,10 +17,10 @@ const Aux = props => props.children;
 @observer export default class ItemContentToolbarComponent extends React.Component {
   static propTypes = {
     itemContentStore: PropTypes.object.isRequired,
-    deleteItem: PropTypes.func.isRequired,
-    createItem: PropTypes.func.isRequired,
-    saveItem: PropTypes.func.isRequired,
-    beforeSaveItem: PropTypes.func.isRequired
+    onDeleteItem: PropTypes.func.isRequired,
+    onCreateItem: PropTypes.func.isRequired,
+    onSaveItem: PropTypes.func.isRequired,
+    onBeforeSaveItem: PropTypes.func.isRequired
   };
 
   newEntryDialogStore = new DialogStore(true);
@@ -41,14 +41,14 @@ const Aux = props => props.children;
         title="New wiki page"
         text="Please enter the name for the new wiki page..."
         store={this.newEntryDialogStore}
-        dialogClosed={() => this.onCreateNewEntryDialogClosed()}
+        onDialogClosed={() => this.onCreateNewEntryDialogClosed()}
       />
     );
   }
 
   onCreateNewEntryDialogClosed() {
     if (this.newEntryDialogStore.isConfirmed) {
-      this.props.createItem(this.newEntryDialogStore.value);
+      this.props.onCreateItem(this.newEntryDialogStore.value);
     }
   }
 
@@ -58,14 +58,14 @@ const Aux = props => props.children;
         title="Delete wiki page"
         text="Do you really want to delete the current wiki page?"
         store={this.deleteEntryDialogStore}
-        dialogClosed={() => this.onDeleteEntryDialogClosed()}
+        onDialogClosed={() => this.onDeleteEntryDialogClosed()}
       />
     );
   }
 
   onDeleteEntryDialogClosed() {
     if (this.deleteEntryDialogStore.isConfirmed) {
-      this.props.deleteItem();
+      this.props.onDeleteItem();
     }
   }
 
@@ -75,14 +75,14 @@ const Aux = props => props.children;
         title="Save changes"
         text="Please enter a commit message for your changes"
         store={this.saveEntryDialogStore}
-        dialogClosed={() => this.onSaveEntryDialogClosed()}
+        onDialogClosed={() => this.onSaveEntryDialogClosed()}
       />
     );
   }
 
   onSaveEntryDialogClosed() {
     if (this.saveEntryDialogStore.isConfirmed) {
-      this.props.saveItem(this.saveEntryDialogStore.value);
+      this.props.onSaveItem(this.saveEntryDialogStore.value);
     }
   }
 
@@ -95,7 +95,7 @@ const Aux = props => props.children;
   }
 
   onSaveButtonClicked() {
-    const defaultCommitMessage = this.props.beforeSaveItem();
+    const defaultCommitMessage = this.props.onBeforeSaveItem();
 
     this.saveEntryDialogStore.openDialog(defaultCommitMessage);
   }
@@ -176,7 +176,7 @@ const Aux = props => props.children;
         <style jsx> {`
           .ItemContent-toolbar {
             position: fixed;
-            top: 80px;
+            top: 110px;
             right: 20px;
             z-index: 99;
           }
@@ -188,10 +188,18 @@ const Aux = props => props.children;
           }
 
           @media (min-width: ${ screensizes.smallTablet }) {
+
             :global(.Toolbar-button) {
               width: 48px;
               height: 48px;
             }
+
+            @media (min-width: ${ screensizes.iPadPortrait }) {
+              .ItemContent-toolbar {
+                top: 80px;
+              }
+            }
+
           }
         `}
         </style>

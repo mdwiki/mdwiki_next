@@ -1,7 +1,9 @@
 {
   "roots": [
+    "common",
+    "./components",
     "./pages",
-    "./components"
+    "./services"
   ],
   "notify": true
 }

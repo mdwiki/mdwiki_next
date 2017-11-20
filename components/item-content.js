@@ -83,7 +83,7 @@ const SimpleMDEOptions = {
     this.updateLocation(itemPath.substr(0, itemPath.length - 3));
   }
 
-  async onCreateNewItem(itemName) {
+  async onCreateItem(itemName) {
     const { settings } = this.props.appStore;
     const newItem = await this.itemContentStore.createNewItem(
       settings.user,
@@ -95,7 +95,7 @@ const SimpleMDEOptions = {
     this.props.appStore.addItem(this.itemContentStore.item);
   }
 
-  async onSaveCurrentItem(commitMessage) {
+  async onSaveItem(commitMessage) {
     const { settings } = this.props.appStore;
     await this.itemContentStore.saveContent(
       settings.user,
@@ -126,11 +126,11 @@ const SimpleMDEOptions = {
     return defaultCommitMessage;
   }
 
-  async onDeleteCurrentItem() {
+  async onDeleteItem() {
     this.props.appStore.removeItem(this.itemContentStore.item.path);
 
     const { settings } = this.props.appStore;
-    await this.itemContentStore.deleteItem(settings.user, settings.repository);
+    await this.itemContentStore.onDeleteItem(settings.user, settings.repository);
 
     await this.changeItemContent('index.md');
   }
@@ -146,7 +146,14 @@ const SimpleMDEOptions = {
         onChange={markdownText => this.itemContentStore.updateContent(markdownText)}
         value={this.itemContentStore.markdownText}
         options={SimpleMDEOptions}
-      />
+      >
+        <style jsx> {`
+          :global(.CodeMirror-scroll) {
+            height: calc(100vh - 160px);
+          }
+        `}
+        </style>
+      </SimpleMDE>
     );
   }
 
@@ -177,10 +184,10 @@ const SimpleMDEOptions = {
     return (
       <ItemContentToolbar
         itemContentStore={this.itemContentStore}
-        deleteItem={() => this.onDeleteCurrentItem()}
-        createItem={itemName => this.onCreateNewItem(itemName)}
-        beforeSaveItem={() => this.onBeforeSaveItem()}
-        saveItem={commitMessage => this.onSaveCurrentItem(commitMessage)}
+        onDeleteItem={() => this.onDeleteItem()}
+        onCreateItem={itemName => this.onCreateItem(itemName)}
+        onBeforeSaveItem={() => this.onBeforeSaveItem()}
+        onSaveItem={commitMessage => this.onSaveItem(commitMessage)}
       />
     );
   }
@@ -198,7 +205,7 @@ const SimpleMDEOptions = {
         {this.renderEditor()}
 
         <style jsx> {`
-          :global(.ItemContent-container) {
+          .ItemContent-container {
             height: calc(100vh - 84px);
             overflow-y: hidden;
           }

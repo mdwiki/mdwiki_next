@@ -37,6 +37,8 @@ rules:
     - off
   no-underscore-dangle:
     - off
+  no-restricted-syntax:
+    - off
   template-curly-spacing:
     - off
   prefer-destructuring:

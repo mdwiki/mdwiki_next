@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
 import github from './../services/github.service.js';
-
-const EXCLUDE_ITEMS = ['index.md', 'readme.md'];
+import groupPages from './../common/helpers/page-grouper.js';
+import pageListFilter from './../common/helpers/page-list-filter.js';
 
 @observer export default class ItemList extends React.Component {
   static propTypes = {
     appStore: PropTypes.object.isRequired
   };
-
-  lastLetter = '';
 
   componentDidMount() {
     this.fetchItems(this.props.appStore);
@@ -28,42 +26,31 @@ const EXCLUDE_ITEMS = ['index.md', 'readme.md'];
         appStore.settings.repository
       );
 
-      appStore.setItems(items.filter(this.itemFilter));
+      appStore.setItems(items.filter(pageListFilter));
     }
-  }
-
-  itemFilter(item) {
-    return item.name.endsWith('.md') &&
-      !EXCLUDE_ITEMS.some(itemName => itemName === item.name.toLowerCase());
   }
 
   onItemClick(item) {
     this.props.appStore.changeSelectedItem(item.name);
   }
 
-  renderSubHeader(itemName) {
-    const letter = itemName.substr(0, 1).toUpperCase();
-    if (letter !== this.lastLetter) {
-      this.lastLetter = letter;
-      return (
-        <ListSubheader className="ItemSubHeader">{letter}</ListSubheader>
-      );
-    }
-
-    return null;
+  renderPage(page) {
+    return (
+      <ListItem button key={page.name}>
+        <ListItemText
+          className="ItemNameText"
+          primary={page.name.substr(0, page.name.length - 3)}
+          onClick={() => this.onItemClick(page)}
+        />
+      </ListItem>
+    );
   }
 
-  renderItem(item) {
+  renderGroup(group) {
     return (
-      <div key={item.path}>
-        { this.renderSubHeader(item.name) }
-        <ListItem button>
-          <ListItemText
-            className="ItemNameText"
-            primary={item.name.substr(0, item.name.length - 3)}
-            onClick={() => this.onItemClick(item)}
-          />
-        </ListItem>
+      <div key={group.letter}>
+        <ListSubheader className="ItemSubHeader" key={group.letter}>{group.letter}</ListSubheader>
+        { group.pages.map(page => this.renderPage(page))}
       </div>
     );
   }
@@ -74,11 +61,11 @@ const EXCLUDE_ITEMS = ['index.md', 'readme.md'];
       return null;
     }
 
-    this.lastLetter = '';
+    const groups = groupPages(appStore.items);
 
     return (
       <List>
-        {appStore.items.map(item => this.renderItem(item))}
+        {groups.map(group => this.renderGroup(group))}
         <style jsx> {`
           :global(.ItemNameText) {
             margin-left: 10px;

@@ -15,24 +15,28 @@ function Transition(props) {
     title: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
     store: PropTypes.object.isRequired,
-    dialogClosed: PropTypes.func.isRequired
+    onDialogClosed: PropTypes.func.isRequired
   };
 
-  handleRequestClose(isConfirmed = false) {
+  onRequestClose(isConfirmed = false) {
     this.props.store.closeDialog(isConfirmed);
     if (!this.props.store.isOpened) {
-      this.props.dialogClosed();
+      this.props.onDialogClosed();
     }
   }
 
   onNewEntryNameKeydown(e) {
     const KEY_CODE_ENTER = 13;
     if (e.which === KEY_CODE_ENTER) {
-      this.handleRequestClose(true);
+      this.onRequestClose(true);
     }
   }
 
-  renderInputField(store) {
+  renderInputFieldIfValueIsRequired(store) {
+    if (!store.isValueRequired) {
+      return null;
+    }
+
     return (
       <TextField
         id="newEntryNameInput"
@@ -51,26 +55,24 @@ function Transition(props) {
       <Dialog
         open={this.props.store.isOpened}
         transition={Transition}
-        onRequestClose={() => this.handleRequestClose()}
+        onRequestClose={() => this.onRequestClose()}
       >
         <DialogTitle>{this.props.title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{this.props.text}</DialogContentText>
-          { this.props.store.isValueRequired && this.renderInputField(this.props.store) }
+          { this.renderInputFieldIfValueIsRequired(this.props.store) }
         </DialogContent>
         <DialogActions>
           <Button
-            className="Dialog-button"
-            raised
-            onClick={() => this.handleRequestClose()}
+            className="Dialog-button" raised
+            onClick={() => this.onRequestClose()}
           >
             Cancel
           </Button>
           <Button
-            className="Dialog-button"
-            raised color="primary"
+            className="Dialog-button" raised color="primary"
             disabled={this.props.store.isValueRequired && !this.props.store.hasValue}
-            onClick={() => this.handleRequestClose(true)}
+            onClick={() => this.onRequestClose(true)}
           >
             Ok
           </Button>
