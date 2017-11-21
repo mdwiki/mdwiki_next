@@ -6,8 +6,8 @@ export default class SearchStore {
   @observable searchTerm = '';
   @observable searchResult = null
 
-  _compareByName(item1, item2) {
-    return item1.name.localeCompare(item2.name);
+  _compareByName(page1, page2) {
+    return page1.name.localeCompare(page2.name);
   }
 
   @action async startSearch(user, repository, searchTerm) {
@@ -16,7 +16,7 @@ export default class SearchStore {
     try {
       this.searchTerm = searchTerm;
 
-      const result = await github.search(user, repository, searchTerm);
+      const result = await github.searchPages(user, repository, searchTerm);
       result.items.sort(this._compareByName);
       this.searchResult = result;
     } finally {

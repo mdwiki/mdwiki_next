@@ -6,41 +6,41 @@ import github from './../services/github.service.js';
 import groupPages from './../common/helpers/page-grouper.js';
 import pageListFilter from './../common/helpers/page-list-filter.js';
 
-@observer export default class ItemList extends React.Component {
+@observer export default class PageList extends React.Component {
   static propTypes = {
     appStore: PropTypes.object.isRequired
   };
 
   componentDidMount() {
-    this.fetchItems(this.props.appStore);
+    this.fetchPages(this.props.appStore);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.fetchItems(nextProps.appStore);
+    this.fetchPages(nextProps.appStore);
   }
 
-  async fetchItems(appStore) {
+  async fetchPages(appStore) {
     if (appStore.settings && appStore.settings.user) {
-      const items = await github.fetchItems(
+      const pages = await github.fetchPages(
         appStore.settings.user,
         appStore.settings.repository
       );
 
-      appStore.setItems(items.filter(pageListFilter));
+      appStore.setPages(pages.filter(pageListFilter));
     }
   }
 
-  onItemClick(item) {
-    this.props.appStore.changeSelectedItem(item.name);
+  onPageClicked(page) {
+    this.props.appStore.changeSelectedPage(page.name);
   }
 
   renderPage(page) {
     return (
       <ListItem button key={page.name}>
         <ListItemText
-          className="ItemNameText"
+          className="PageNameText"
           primary={page.name.substr(0, page.name.length - 3)}
-          onClick={() => this.onItemClick(page)}
+          onClick={() => this.onPageClicked(page)}
         />
       </ListItem>
     );
@@ -49,7 +49,7 @@ import pageListFilter from './../common/helpers/page-list-filter.js';
   renderGroup(group) {
     return (
       <div key={group.letter}>
-        <ListSubheader className="ItemSubHeader" key={group.letter}>{group.letter}</ListSubheader>
+        <ListSubheader className="PageSubHeader" key={group.letter}>{group.letter}</ListSubheader>
         { group.pages.map(page => this.renderPage(page))}
       </div>
     );
@@ -57,21 +57,21 @@ import pageListFilter from './../common/helpers/page-list-filter.js';
 
   render() {
     const appStore = this.props.appStore;
-    if (!appStore.items) {
+    if (!appStore.pages) {
       return null;
     }
 
-    const groups = groupPages(appStore.items);
+    const groups = groupPages(appStore.pages);
 
     return (
       <List>
         {groups.map(group => this.renderGroup(group))}
         <style jsx> {`
-          :global(.ItemNameText) {
+          :global(.PageNameText) {
             margin-left: 10px;
           }
 
-          :global(.ItemSubHeader) {
+          :global(.PageSubHeader) {
             font-weight: bold;
             font-size: 18px;
           }

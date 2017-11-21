@@ -14,96 +14,96 @@ import DialogStore from './../stores/dialog.store.js';
 
 const Aux = props => props.children;
 
-@observer export default class ItemContentToolbarComponent extends React.Component {
+@observer export default class PageToolbarComponent extends React.Component {
   static propTypes = {
-    itemContentStore: PropTypes.object.isRequired,
-    onDeleteItem: PropTypes.func.isRequired,
-    onCreateItem: PropTypes.func.isRequired,
-    onSaveItem: PropTypes.func.isRequired,
-    onBeforeSaveItem: PropTypes.func.isRequired
+    pageStore: PropTypes.object.isRequired,
+    onDeletePage: PropTypes.func.isRequired,
+    onCreatePage: PropTypes.func.isRequired,
+    onSavePage: PropTypes.func.isRequired,
+    onBeforeSavePage: PropTypes.func.isRequired
   };
 
-  newEntryDialogStore = new DialogStore(true);
-  deleteEntryDialogStore = new DialogStore();
-  saveEntryDialogStore = new DialogStore(true);
+  newPageDialogStore = new DialogStore(true);
+  deletePageDialogStore = new DialogStore();
+  savePageDialogStore = new DialogStore(true);
 
-  onNewEntryNameKeydown(e) {
+  onNewPageNameKeydown(e) {
     const KEY_CODE_ENTER = 13;
     if (e.which === KEY_CODE_ENTER) {
-      this.newEntryDialogStore.closeDialog(true);
-      this.onCreateNewEntryDialogClosed();
+      this.newPageDialogStore.closeDialog(true);
+      this.onCreateNewPageDialogClosed();
     }
   }
 
-  renderNewEntryDialog() {
+  renderNewPageDialog() {
     return (
       <Dialog
         title="New wiki page"
         text="Please enter the name for the new wiki page..."
-        store={this.newEntryDialogStore}
-        onDialogClosed={() => this.onCreateNewEntryDialogClosed()}
+        store={this.newPageDialogStore}
+        onDialogClosed={() => this.onCreateNewPageDialogClosed()}
       />
     );
   }
 
-  onCreateNewEntryDialogClosed() {
-    if (this.newEntryDialogStore.isConfirmed) {
-      this.props.onCreateItem(this.newEntryDialogStore.value);
+  onCreateNewPageDialogClosed() {
+    if (this.newPageDialogStore.isConfirmed) {
+      this.props.onCreatePage(this.newPageDialogStore.value);
     }
   }
 
-  renderDeleteEntryDialog() {
+  renderDeletePageDialog() {
     return (
       <Dialog
         title="Delete wiki page"
         text="Do you really want to delete the current wiki page?"
-        store={this.deleteEntryDialogStore}
-        onDialogClosed={() => this.onDeleteEntryDialogClosed()}
+        store={this.deletePageDialogStore}
+        onDialogClosed={() => this.onDeletePageDialogClosed()}
       />
     );
   }
 
-  onDeleteEntryDialogClosed() {
-    if (this.deleteEntryDialogStore.isConfirmed) {
-      this.props.onDeleteItem();
+  onDeletePageDialogClosed() {
+    if (this.deletePageDialogStore.isConfirmed) {
+      this.props.onDeletePage();
     }
   }
 
-  renderSaveEntryDialog() {
+  renderSavePageDialog() {
     return (
       <Dialog
         title="Save changes"
         text="Please enter a commit message for your changes"
-        store={this.saveEntryDialogStore}
-        onDialogClosed={() => this.onSaveEntryDialogClosed()}
+        store={this.savePageDialogStore}
+        onDialogClosed={() => this.onSavePageDialogClosed()}
       />
     );
   }
 
-  onSaveEntryDialogClosed() {
-    if (this.saveEntryDialogStore.isConfirmed) {
-      this.props.onSaveItem(this.saveEntryDialogStore.value);
+  onSavePageDialogClosed() {
+    if (this.savePageDialogStore.isConfirmed) {
+      this.props.onSavePage(this.savePageDialogStore.value);
     }
   }
 
   onEditButtonClicked() {
-    this.props.itemContentStore.toggleEditMode();
+    this.props.pageStore.toggleEditMode();
   }
 
   onCancelEditButtonClicked() {
-    this.props.itemContentStore.toggleEditMode();
+    this.props.pageStore.toggleEditMode();
   }
 
   onSaveButtonClicked() {
-    const defaultCommitMessage = this.props.onBeforeSaveItem();
+    const defaultCommitMessage = this.props.onBeforeSavePage();
 
-    this.saveEntryDialogStore.openDialog(defaultCommitMessage);
+    this.savePageDialogStore.openDialog(defaultCommitMessage);
   }
 
   renderEditModeButtons() {
     return (
       <Aux>
-        {this.renderSaveEntryDialog()}
+        {this.renderSavePageDialog()}
         <Tooltip title="Cancel">
           <IconButton
             className="Toolbar-button"
@@ -129,14 +129,14 @@ const Aux = props => props.children;
   renderNonEditModeButtons() {
     return (
       <Aux>
-        {this.renderNewEntryDialog()}
-        {this.renderDeleteEntryDialog()}
+        {this.renderNewPageDialog()}
+        {this.renderDeletePageDialog()}
 
         <Tooltip title="Add">
           <IconButton
             className="Toolbar-button"
             aria-label="Add"
-            onClick={() => this.newEntryDialogStore.openDialog('New page')}
+            onClick={() => this.newPageDialogStore.openDialog('New page')}
           >
             <AddIcon />
           </IconButton>
@@ -154,7 +154,7 @@ const Aux = props => props.children;
           <IconButton
             className="Toolbar-button"
             aria-label="Delete"
-            onClick={() => this.deleteEntryDialogStore.openDialog()}
+            onClick={() => this.deletePageDialogStore.openDialog()}
           >
             <DeleteIcon />
           </IconButton>
@@ -164,17 +164,17 @@ const Aux = props => props.children;
   }
 
   render() {
-    if (!this.props.itemContentStore) {
+    if (!this.props.pageStore) {
       return null;
     }
 
     return (
-      <div className="ItemContent-toolbar">
-        {this.props.itemContentStore.isInEditMode && this.renderEditModeButtons()}
-        {!this.props.itemContentStore.isInEditMode && this.renderNonEditModeButtons()}
+      <div className="Page-toolbar">
+        {this.props.pageStore.isInEditMode && this.renderEditModeButtons()}
+        {!this.props.pageStore.isInEditMode && this.renderNonEditModeButtons()}
 
         <style jsx> {`
-          .ItemContent-toolbar {
+          .Page-toolbar {
             position: fixed;
             top: 110px;
             right: 20px;
@@ -195,7 +195,7 @@ const Aux = props => props.children;
             }
 
             @media (min-width: ${ screensizes.iPadPortrait }) {
-              .ItemContent-toolbar {
+              .Page-toolbar {
                 top: 80px;
               }
             }

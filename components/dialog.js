@@ -25,7 +25,7 @@ function Transition(props) {
     }
   }
 
-  onNewEntryNameKeydown(e) {
+  onValueInputKeydown(e) {
     const KEY_CODE_ENTER = 13;
     if (e.which === KEY_CODE_ENTER) {
       this.onRequestClose(true);
@@ -39,12 +39,12 @@ function Transition(props) {
 
     return (
       <TextField
-        id="newEntryNameInput"
-        className="NewEntryName-input"
+        id="dialogValueInput"
+        className="DialogValue-input"
         value={store.value}
         error={!store.hasValue}
         onFocus={(e) => e.target.select()}
-        onKeyDown={e => this.onNewEntryNameKeydown(e)}
+        onKeyDown={e => this.onValueInputKeydown(e)}
         onChange={(e) => store.changeValue(e.target.value)}
       />
     );
@@ -83,7 +83,7 @@ function Transition(props) {
             margin-bottom: 10px;
           }
 
-          :global(.NewEntryName-input) {
+          :global(.DialogValue-input) {
             margin-top: 20px;
             width: 320px;
           }

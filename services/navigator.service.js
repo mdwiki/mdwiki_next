@@ -5,17 +5,19 @@ class NavigatorService {
     return this.gotoPage('index.md');
   }
 
-  gotoPage(itemName) {
-    console.log('GotoPage', itemName);
-    Router.push({ pathname: '/', query: { name: itemName } });
+  gotoPage(pageName) {
+    Router.push({ pathname: '/', query: { name: pageName } });
   }
 
   gotoSearchPage(searchTerm) {
     Router.push({ pathname: '/search', query: { searchTerm: escape(searchTerm) } });
   }
 
-  gotoConnectPage() {
-    Router.push('/connect');
+  gotoConnectPage(user, repository) {
+    Router.push({
+      pathname: '/connect',
+      query: { user, repository }
+    });
   }
 
   gotoLoginPage() {

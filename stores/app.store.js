@@ -12,8 +12,8 @@ class AppStore {
   @observable searchTerm = '';
   @observable settings = null;
   @observable user = null;
-  @observable items = null;
-  @observable selectedItem = null;
+  @observable pages = null;
+  @observable selectedPage = null;
 
   constructor(isServer) {
     this.isServer = isServer;
@@ -48,36 +48,36 @@ class AppStore {
     this.searchTerm = searchTerm;
   }
 
-  @action changeSelectedItem(item) {
-    this.selectedItem = item;
+  @action changeSelectedPage(page) {
+    this.selectedPage = page;
   }
 
-  _compareByName(item1, item2) {
-    return item1.name.localeCompare(item2.name);
+  _compareByName(page1, page2) {
+    return page1.name.localeCompare(page2.name);
   }
 
-  @action setItems(items) {
-    items.sort(this._compareByName);
-    this.items = items;
+  @action setPages(pages) {
+    pages.sort(this._compareByName);
+    this.pages = pages;
   }
 
-  @action addItem(item) {
-    if (item.path === 'index.md') {
+  @action addPage(page) {
+    if (page.path === 'index.md') {
       return; // The index page we wont show in the list
     }
 
-    const items = this.items.slice();
-    items.push(item);
-    this.setItems(items);
+    const pages = this.pages.slice();
+    pages.push(page);
+    this.setPages(pages);
   }
 
-  @action removeItem(itemPath) {
-    const items = this.items.slice();
-    const itemIndex = items.findIndex(i => i.path === itemPath);
+  @action removePage(path) {
+    const pages = this.pages.slice();
+    const pageIndex = pages.findIndex(i => i.path === path);
 
-    if (itemIndex >= 0) {
-      items.splice(itemIndex, 1);
-      this.setItems(items);
+    if (pageIndex >= 0) {
+      pages.splice(pageIndex, 1);
+      this.setPages(pages);
     }
   }
 

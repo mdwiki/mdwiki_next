@@ -6,7 +6,7 @@ import HtmlToReact from 'html-to-react';
 import github from './../services/github.service.js';
 import navigator from './../services/navigator.service.js';
 
-export default class ItemContentStore {
+export default class PageStore {
   @observable isBusy = false;
   @observable path = null;
   @observable markdownText = null;
@@ -14,41 +14,41 @@ export default class ItemContentStore {
   @observable markdownAsReact = null;
   @observable isInEditMode = false;
 
-  @action async changeContent(user, repository, itemPath) {
+  @action async loadPage(user, repository, path) {
     this.isBusy = true;
 
     try {
-      this.item = await github.fetchItem(user, repository, itemPath);
-      this.markdownText = this.item.content;
-      this.markdownAsHtml = this.fixLinks(markdown.toHTML(this.item.content));
-      this.markdownAsReact = this.renderToReact(this.markdownAsHtml);
+      this.page = await github.getPage(user, repository, path);
+      this.markdownText = this.page.content;
+      this.markdownAsHtml = this._fixLinks(markdown.toHTML(this.page.content));
+      this.markdownAsReact = this._renderToReact(this.markdownAsHtml);
     } finally {
       this.isBusy = false;
       this.isInEditMode = false;
     }
   }
 
-  @action async updateContent(markdownText) {
+  @action async updatePage(markdownText) {
     this.markdownText = markdownText;
-    this.markdownAsHtml = this.fixLinks(markdown.toHTML(this.item.content));
+    this.markdownAsHtml = this._fixLinks(markdown.toHTML(this.page.content));
   }
 
-  @action async saveContent(user, repository, commitMessage) {
+  @action async savePage(user, repository, commitMessage) {
     this.isBusy = true;
 
     try {
-      await github.putItem(
+      await github.createOrUpdatePage(
         user,
         repository,
-        this.item.path,
+        this.page.path,
         this.markdownText,
         commitMessage,
-        this.item.sha
+        this.page.sha
       );
 
-      this.markdownText = this.item.content;
-      this.markdownAsHtml = this.fixLinks(markdown.toHTML(this.item.content));
-      this.markdownAsReact = this.renderToReact(this.markdownAsHtml);
+      this.markdownText = this.page.content;
+      this.markdownAsHtml = this._fixLinks(markdown.toHTML(this.page.content));
+      this.markdownAsReact = this._renderToReact(this.markdownAsHtml);
     } finally {
       this.isBusy = false;
     }
@@ -58,7 +58,27 @@ export default class ItemContentStore {
     this.isInEditMode = !this.isInEditMode;
   }
 
-  fixLinks(html) {
+  createPage(user, repository, pageName) {
+    const content = `# ${pageName}`;
+    const commitMessage = `Create new page ${pageName}`;
+    const path = `${pageName.replace(' ', '')}.md`;
+
+    return github.createOrUpdatePage(
+      user,
+      repository,
+      path,
+      content,
+      commitMessage
+    );
+  }
+
+  async deletePage(user, repository) {
+    const commitMessage = `Delete page ${this.page.name}`;
+    await github.deletePage(user, repository, this.page.path, commitMessage, this.page.sha);
+    navigator.goHome();
+  }
+
+  _fixLinks(html) {
     const $ = cheerio.load(html);
 
     $('html').replaceWith(`<div>${$('body').html()}</div`);
@@ -67,27 +87,7 @@ export default class ItemContentStore {
     return $.html();
   }
 
-  createNewItem(user, repository, itemName) {
-    const itemContent = `# ${itemName}`;
-    const commitMessage = `Create new page ${itemName}`;
-    const itemPath = `${itemName.replace(' ', '')}.md`;
-
-    return github.putItem(
-      user,
-      repository,
-      itemPath,
-      itemContent,
-      commitMessage
-    );
-  }
-
-  async deleteItem(user, repository) {
-    const commitMessage = `Delete page ${this.item.name}`;
-    await github.deleteItem(user, repository, this.item.path, commitMessage, this.item.sha);
-    navigator.goHome();
-  }
-
-  renderToReact(html) {
+  _renderToReact(html) {
     const processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
     const processingInstructions = [{
       shouldProcessNode: node => node.attribs && node.attribs.href && node.attribs.href.startsWith('/'),

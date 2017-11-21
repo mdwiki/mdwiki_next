@@ -2,12 +2,12 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { initAppStore } from './../stores/app.store.js';
 import PageLayout from './../components/page-layout.js';
-import ItemContent from './../components/item-content.js';
+import Page from './../components/page.js';
 
 @observer export default class IndexPage extends React.Component {
   static async getInitialProps({ query }) {
     return {
-      itemName: query.name
+      pageName: query.name
     };
   }
 
@@ -25,14 +25,14 @@ import ItemContent from './../components/item-content.js';
       return null;
     }
 
-    let itemName = this.props.itemName || 'index.md';
-    if (!itemName.endsWith('.md')) {
-      itemName += '.md';
+    let pageName = this.props.pageName || 'index.md';
+    if (!pageName.endsWith('.md')) {
+      pageName += '.md';
     }
 
     return (
       <PageLayout appStore={this.appStore}>
-        <ItemContent appStore={this.appStore} itemName={itemName} />
+        <Page appStore={this.appStore} pageName={pageName} />
       </PageLayout>
     );
   }

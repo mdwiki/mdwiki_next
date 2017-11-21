@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import Router from 'next/router';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
@@ -13,7 +12,9 @@ import classNames from 'classnames';
 import GithubIcon from './github-icon.js';
 import SearchButton from './search-button.js';
 import UserIcon from './user-icon.js';
-import ItemList from './item-list.js';
+import PageList from './page-list.js';
+import navigator from './../services/navigator.service.js';
+
 import { screensizes } from './../common/styles/screensizes.js';
 
 export default class PageLayout extends React.Component {
@@ -40,29 +41,27 @@ export default class PageLayout extends React.Component {
   }
 
   connect(appStore) {
-    Router.push({
-      pathname: '/connect',
-      query: { user: appStore.settings.user, repository: appStore.settings.repository }
-    });
+    const { user, repository } = appStore.settings;
+    navigator.gotoConnectPage(user, repository);
   }
 
   login() {
-    Router.push('/login');
+    navigator.gotoLoginPage();
   }
 
   logout() {
-    Router.push('/logout');
+    navigator.gotoLogoutPage();
   }
 
   goHome() {
-    Router.push({ pathname: '/', query: { itemName: 'index.md' } });
-    this.props.appStore.selectedItem = 'index.md';
+    navigator.goHome();
+    this.props.appStore.selectedPage = 'index.md';
   }
 
   renderStaticSidebar(appStore) {
     return (
       <div className="Sidebar">
-        <ItemList appStore={appStore} />
+        <PageList appStore={appStore} />
       </div>
     );
   }
@@ -77,7 +76,7 @@ export default class PageLayout extends React.Component {
         onRequestClose={() => this.toggleLeftSidebar()}
         onClick={() => this.toggleLeftSidebar()}
       >
-        <ItemList appStore={appStore} />
+        <PageList appStore={appStore} />
       </Drawer>
     );
   }

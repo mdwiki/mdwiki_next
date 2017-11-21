@@ -1,7 +1,6 @@
 import React from 'react';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import Router from 'next/router';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import SearchIcon from 'material-ui-icons/Search';
@@ -10,6 +9,7 @@ import SearchStore from './../stores/search.store.js';
 import PageLayout from './../components/page-layout.js';
 import ProgressBar from './../components/progress-bar.js';
 import { screensizes } from './../common/styles/screensizes.js';
+import navigator from './../services/navigator.service.js';
 
 const DELAY_TYPE_TIMEOUT = 1000;
 
@@ -72,14 +72,14 @@ const DELAY_TYPE_TIMEOUT = 1000;
     await this.searchStore.startSearch(settings.user, settings.repository, searchTerm);
   }
 
-  navigateTo(itemName) {
-    Router.push({ pathname: '/', query: { name: itemName } });
+  navigateTo(pageName) {
+    navigator.gotoPage(pageName);
   }
 
-  renderSearchResultItem(item) {
+  renderSearchResult(page) {
     return (
-      <li key={item.name}>
-        <button className="Link-button" onClick={() => this.navigateTo(item.name)}>{item.name}</button>
+      <li key={page.name}>
+        <button className="Link-button" onClick={() => this.navigateTo(page.name)}>{page.name}</button>
       </li>
     );
   }
@@ -121,7 +121,7 @@ const DELAY_TYPE_TIMEOUT = 1000;
             <ul>
               {
                 searchStore.searchResult &&
-                searchStore.searchResult.items.map(s => this.renderSearchResultItem(s))
+                searchStore.searchResult.items.map(s => this.renderSearchResult(s))
               }
             </ul>
           </div>

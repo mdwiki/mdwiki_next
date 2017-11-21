@@ -63,41 +63,41 @@ class GithubService {
     return window.btoa(content);
   }
 
-  _mapItem(item) {
-    if (item) {
+  _mapPage(page) {
+    if (page) {
       return {
-        name: item.name,
-        path: item.path,
-        sha: item.sha,
-        content: this._decodeContent(item.content)
+        name: page.name,
+        path: page.path,
+        sha: page.sha,
+        content: this._decodeContent(page.content)
       };
     }
     return undefined;
   }
 
-  fetchItems(userName, repository) {
+  fetchPages(userName, repository) {
     const url = `/repos/${userName}/${repository}/contents`;
     return this._get(url);
   }
 
-  async fetchItem(userName, repository, itemPath) {
-    const item = await this._get(`/repos/${userName}/${repository}/contents/${itemPath}`);
-    return this._mapItem(item);
+  async getPage(userName, repository, path) {
+    const page = await this._get(`/repos/${userName}/${repository}/contents/${path}`);
+    return this._mapPage(page);
   }
 
-  async putItem(userName, repository, itemPath, itemContent, commitMessage, sha) {
-    const url = `/repos/${userName}/${repository}/contents/${itemPath}`;
+  async createOrUpdatePage(userName, repository, path, pageContent, commitMessage, sha) {
+    const url = `/repos/${userName}/${repository}/contents/${path}`;
     const body = {
       message: commitMessage,
-      content: this._encodeContent(itemContent),
+      content: this._encodeContent(pageContent),
       sha
     };
 
     const response = await this._put(url, body);
-    return this._mapItem(response.content);
+    return this._mapPage(response.content);
   }
 
-  deleteItem(userName, repository, itemPath, commitMessage, sha) {
+  deletePage(userName, repository, itemPath, commitMessage, sha) {
     const url = `/repos/${userName}/${repository}/contents/${itemPath}`;
     const body = {
       message: commitMessage,
@@ -106,7 +106,7 @@ class GithubService {
     return this._delete(url, body);
   }
 
-  search(userName, repository, searchTerm) {
+  searchPages(userName, repository, searchTerm) {
     const searchUrl = `/search/code?q=${escape(searchTerm)}+in:file+extension:md+repo:${userName}/${repository}`;
     return this._get(searchUrl);
   }

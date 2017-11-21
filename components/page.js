@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import SimpleMDE from 'react-simplemde-editor';
-import ItemContentStore from './../stores/item-content.store.js';
+import PageStore from './../stores/page.store.js';
 import ProgressBar from './progress-bar.js';
-import ItemContentToolbar from './item-content-toolbar.js';
+import PageToolbar from './page-toolbar.js';
 
 const SimpleMDEOptions = {
   spellChecker: false,
@@ -32,26 +32,26 @@ const SimpleMDEOptions = {
   ]
 };
 
-@observer export default class ItemContent extends React.Component {
+@observer export default class Page extends React.Component {
   static propTypes = {
     appStore: PropTypes.object.isRequired,
-    itemName: PropTypes.string.isRequired
+    pageName: PropTypes.string.isRequired
   };
 
   constructor(props) {
     super(props);
-    this.itemContentStore = new ItemContentStore();
+    this.pageStore = new PageStore();
   }
 
-  componentDidMount() {
-    if (!this.itemContentStore.itemContentStore) {
-      this.changeItemContent(this.props.itemName);
-    }
+  async componentDidMount() {
+    if (this.props.pageName) {
+      await this.loadPage(this.props.pageName);
 
-    this.unregisterReaction = reaction(
-      () => this.props.appStore.selectedItem,
-      itemName => this.changeItemContent(itemName)
-    );
+      this.unregisterReaction = reaction(
+        () => this.props.appStore.selectedPage,
+        pageName => this.loadPage(pageName)
+      );
+    }
   }
 
   componentWillUnmount() {
@@ -61,58 +61,57 @@ const SimpleMDEOptions = {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.itemName !== this.props.itemName) {
-      this.changeItemContent(nextProps.itemName);
+    if (nextProps.pageName !== this.props.pageName) {
+      this.loadPage(nextProps.pageName);
     }
   }
 
-  updateLocation(itemPath) {
+  updateLocation(path) {
     if (window) {
       const location = window.location;
-      const newUrl = `${location.origin}/${itemPath}`;
+      const newUrl = `${location.origin}/${path}`;
       if (newUrl !== location.href) {
         window.history.replaceState({}, 'PageChange', newUrl);
       }
-      window.ITEM_CONTENT_STORE = this.itemContentStore;
     }
   }
 
-  async changeItemContent(itemPath) {
+  async loadPage(path) {
     const settings = this.props.appStore.settings;
-    await this.itemContentStore.changeContent(settings.user, settings.repository, itemPath);
-    this.updateLocation(itemPath.substr(0, itemPath.length - 3));
+    await this.pageStore.loadPage(settings.user, settings.repository, path);
+    this.updateLocation(path.substr(0, path.length - 3));
   }
 
-  async onCreateItem(itemName) {
+  async onCreatePage(pageName) {
     const { settings } = this.props.appStore;
-    const newItem = await this.itemContentStore.createNewItem(
+    const newPage = await this.pageStore.createPage(
       settings.user,
       settings.repository,
-      itemName
+      pageName
     );
 
-    await this.changeItemContent(newItem.path);
-    this.props.appStore.addItem(this.itemContentStore.item);
+    await this.loadPage(newPage.path);
+    this.props.appStore.addPage(this.pageStore.page);
   }
 
-  async onSaveItem(commitMessage) {
+  async onSavePage(commitMessage) {
     const { settings } = this.props.appStore;
-    await this.itemContentStore.saveContent(
+    await this.pageStore.savePage(
       settings.user,
       settings.repository,
       commitMessage
     );
 
-    this.itemContentStore.toggleEditMode();
+    this.pageStore.toggleEditMode();
 
-    await this.itemContentStore.changeContent(
+    await this.pageStore.loadPage(
       settings.user,
       settings.repository,
-      this.itemContentStore.item.path
+      this.pageStore.page.path
     );
   }
 
-  onBeforeSaveItem() {
+  onBeforeSavePage() {
     let defaultCommitMessage;
 
     if (this.simpleMDE) {
@@ -120,31 +119,31 @@ const SimpleMDEOptions = {
     }
 
     if (!defaultCommitMessage) {
-      defaultCommitMessage = `Some changes for ${this.itemContentStore.item.name}`;
+      defaultCommitMessage = `Some changes for ${this.pageStore.page.name}`;
     }
 
     return defaultCommitMessage;
   }
 
-  async onDeleteItem() {
-    this.props.appStore.removeItem(this.itemContentStore.item.path);
+  async onDeletePage() {
+    this.props.appStore.removePage(this.pageStore.page.path);
 
     const { settings } = this.props.appStore;
-    await this.itemContentStore.onDeleteItem(settings.user, settings.repository);
+    await this.pageStore.deletePage(settings.user, settings.repository);
 
-    await this.changeItemContent('index.md');
+    await this.loadPage('index.md');
   }
 
   renderEditor() {
-    if (!this.itemContentStore.isInEditMode) {
+    if (!this.pageStore.isInEditMode) {
       return null;
     }
 
     return (
       <SimpleMDE
         ref={simpleMDE => this.simpleMDE = simpleMDE} // eslint-disable-line no-return-assign
-        onChange={markdownText => this.itemContentStore.updateContent(markdownText)}
-        value={this.itemContentStore.markdownText}
+        onChange={markdownText => this.pageStore.updatePage(markdownText)}
+        value={this.pageStore.markdownText}
         options={SimpleMDEOptions}
       >
         <style jsx> {`
@@ -157,14 +156,14 @@ const SimpleMDEOptions = {
     );
   }
 
-  renderItemContent() {
-    if (this.itemContentStore.isInEditMode) {
+  renderPage() {
+    if (this.pageStore.isInEditMode) {
       return null;
     }
 
     return (
       <div className="Markdown-container markdown-body">
-        { this.itemContentStore.markdownAsReact }
+        { this.pageStore.markdownAsReact }
         <style jsx> {`
           .Markdown-container {
             overflow-y: auto;
@@ -182,30 +181,30 @@ const SimpleMDEOptions = {
     }
 
     return (
-      <ItemContentToolbar
-        itemContentStore={this.itemContentStore}
-        onDeleteItem={() => this.onDeleteItem()}
-        onCreateItem={itemName => this.onCreateItem(itemName)}
-        onBeforeSaveItem={() => this.onBeforeSaveItem()}
-        onSaveItem={commitMessage => this.onSaveItem(commitMessage)}
+      <PageToolbar
+        pageStore={this.pageStore}
+        onDeletePage={() => this.onDeletePage()}
+        onCreatePage={pageName => this.onCreatePage(pageName)}
+        onBeforeSavePage={() => this.onBeforeSavePage()}
+        onSavePage={commitMessage => this.onSavePage(commitMessage)}
       />
     );
   }
 
   render() {
     return (
-      <div className="ItemContent-container">
-        {this.itemContentStore.isBusy && <ProgressBar />}
+      <div className="Page-container">
+        {this.pageStore.isBusy && <ProgressBar />}
 
         <div>
           {this.renderToolbar()}
         </div>
 
-        {this.renderItemContent()}
+        {this.renderPage()}
         {this.renderEditor()}
 
         <style jsx> {`
-          .ItemContent-container {
+          .Page-container {
             height: calc(100vh - 84px);
             overflow-y: hidden;
           }
