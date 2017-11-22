@@ -1,7 +1,7 @@
 IMAGE_NAME="mdwiki"
 CONTAINER_NAME="${IMAGE_NAME}"
 PORT=${1:-3333}
-ENV=${NODE_ENV:-development}
+ENV=${NODE_ENV:-production}
 
 CONTAINER_ID=$(docker ps -a -q -f name=${CONTAINER_NAME})
 if [ -n "${CONTAINER_ID}" ]; then

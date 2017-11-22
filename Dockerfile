@@ -8,12 +8,9 @@ ADD package.json yarn.lock /app/
 
 RUN yarn install
 
-#ADD components /app/components
-ADD pages /app/pages
-ADD server /app/server
-#ADD static /app/static
+ADD . /app/
 
-RUN [ "npm", "run", "build" ]
+RUN [ "yarn", "run", "build" ]
 
 EXPOSE 80
 

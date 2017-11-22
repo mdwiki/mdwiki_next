@@ -1,5 +1,11 @@
 .git
 .next
 .dockerignore
+.gitignore
+.gitattributes
 *.sh
 Dockerfile
+.vimrc
+.nvmrc
+LICENSE
+README.md
