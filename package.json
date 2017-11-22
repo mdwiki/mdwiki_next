@@ -1,7 +1,7 @@
 {
   "name": "mdwiki",
   "version": "2.0.0",
-  "description": "",
+  "description": "A simple markdown based wiki",
   "main": "./server/server.js",
   "repository": "",
   "author": "Jan Baer <jan@janbaer.de>",
@@ -17,6 +17,9 @@
     "test:debug": "node --inspect ./node_modules/.bin/jest --runInBand --config=./jest.config.json",
     "precommit": "lint-staged",
     "prepush": "yarn lint && yarn test"
+  },
+  "engines": {
+    "node": "8.9.1"
   },
   "lint-staged": {
     "*.js": [
