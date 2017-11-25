@@ -10,6 +10,10 @@ services:
       - 443:443
       - 8081:8081
     restart: always
+    volumes:
+      - "./Caddyfile:/etc/Caddyfile"
+      - "$HOME/.caddy:/root.caddy"
+      - "/var/log:/var/log"
 
   mdwiki:
     image: janbaer/mdwiki:latest
