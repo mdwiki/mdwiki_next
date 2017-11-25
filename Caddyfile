@@ -2,6 +2,10 @@ https://www.mdwiki.net {
   log /var/log/caddy-acess.log
 
   proxy / mdwiki:3000
+
+  tls {
+    dns cloudflare
+  }
 }
 
 
