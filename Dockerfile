@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:8.9.1-alpine
 
 RUN mkdir /app && mkdir /app/data
 
