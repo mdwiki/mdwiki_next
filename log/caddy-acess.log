@@ -1,0 +1,12 @@
+172.18.0.1 - - [25/Nov/2017:15:42:57 +0000] "GET / HTTP/1.1" 502 16
+172.18.0.1 - - [25/Nov/2017:15:42:57 +0000] "GET /favicon.ico HTTP/1.1" 502 16
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET / HTTP/1.1" 200 6832
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /_next/d1725ada-883c-435b-8517-edd093aa2515/page/_error/index.js HTTP/1.1" 200 4851
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /static/styles/simplemde.min.css HTTP/1.1" 200 10929
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /static/styles/styles.css HTTP/1.1" 200 1043
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /static/styles/markdown.css HTTP/1.1" 200 13659
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /static/images/wiki.png HTTP/1.1" 200 14070
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /static/styles/normalize.css HTTP/1.1" 200 1904
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /_next/efdff4aa8ffd613e028276136a67a0f1/app.js HTTP/1.1" 200 648562
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /_next/d1725ada-883c-435b-8517-edd093aa2515/page/ HTTP/1.1" 200 1106034
+172.18.0.1 - - [25/Nov/2017:15:44:42 +0000] "GET /static/images/favicon.ico HTTP/1.1" 200 146846
