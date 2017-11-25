@@ -6,6 +6,6 @@
     "clientSecret": "0668f7a0ca22286088dd671f720221c8d8d47c97"
   },
   "client": {
-    "host": "http://localhost/3000"
+    "host": "http://localhost:3000"
   }
 }

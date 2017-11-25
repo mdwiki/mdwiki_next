@@ -9,3 +9,4 @@ Dockerfile
 .nvmrc
 LICENSE
 README.md
+log/

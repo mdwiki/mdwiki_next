@@ -1,0 +1,10 @@
+https://www.mdwiki.net {
+  log /var/log/caddy-acess.log
+
+  proxy / mdwiki:3000
+}
+
+
+:8081 {
+  proxy / dpi:8080
+}

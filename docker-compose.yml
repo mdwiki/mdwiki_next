@@ -1,0 +1,33 @@
+version: '3'
+services:
+  caddy:
+    image: abisoft/caddy
+    links:
+      - mdwiki
+      - dip
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+      - 8081:8081
+    restart: always
+
+  mdwiki:
+    image: janbaer/mdwiki:latest
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    ports:
+      - 3000:3000
+    restart: always
+
+  dip:
+    image: tuxity/docker-image-puller
+    environment:
+      - TOKEN=6033851266
+    ports:
+      - 8080:8080
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    restart: always
+

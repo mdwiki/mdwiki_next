@@ -1,0 +1,11 @@
+{
+  "env": "production",
+  "oauth": {
+    "callbackUrl": "https://www.mdwiki.net/auth/github/callback",
+    "clientId": "8709bb0ebf6c65b4814f",
+    "clientSecret": "2e8d0f6030c4619a0fe5176d641fa078ca45090b"
+  },
+  "client": {
+    "host": "https://www.mdwiki.net"
+  }
+}

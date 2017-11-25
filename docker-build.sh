@@ -1,1 +1,1 @@
-docker build -t mdwiki:latest .
+docker build -t janbaer/mdwiki:latest .
