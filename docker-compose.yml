@@ -8,7 +8,6 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 8081:8081
     restart: always
     volumes:
       - "./Caddyfile:/etc/Caddyfile"

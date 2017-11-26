@@ -1,14 +1,12 @@
-https://www.mdwiki.net {
+http://www.mdwiki.net {
   log /var/log/caddy-acess.log
 
   proxy / mdwiki:3000
 
-  tls {
-    dns cloudflare
-  }
+  tls off
 }
 
 
-:8081 {
+http://update.mdwiki.net {
   proxy / dpi:8080
 }
