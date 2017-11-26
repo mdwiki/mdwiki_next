@@ -1,12 +1,14 @@
+http://mdwiki.net {
+  redir http://www.mdwiki.net
+}
+
 http://www.mdwiki.net {
   log /var/log/caddy-acess.log
 
   proxy / mdwiki:3000
 
+  gzip
+
   tls off
 }
 
-
-http://update.mdwiki.net {
-  proxy / dpi:8080
-}

@@ -4,7 +4,6 @@ services:
     image: abiosoft/caddy
     links:
       - mdwiki
-      - dip
     ports:
       - 80:80
       - 443:443
@@ -22,14 +21,3 @@ services:
     ports:
       - 3000:3000
     restart: always
-
-  dip:
-    image: tuxity/docker-image-puller
-    environment:
-      - TOKEN=6033851266
-    ports:
-      - 8080:8080
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    restart: always
-
