@@ -1,0 +1,8 @@
+{
+  "scripts": [
+    {
+      "command": "sh",
+      "args": ["-c", "/root/mdwiki/update_mdwiki.sh"]
+    }
+  ]
+}
