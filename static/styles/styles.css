@@ -69,3 +69,7 @@ html, body {
   }
 }
 
+.CodeMirror-scroll {
+  height: calc(100vh - 154px);
+}
+

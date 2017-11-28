@@ -167,7 +167,7 @@ const SimpleMDEOptions = {
         <style jsx> {`
           .Markdown-container {
             overflow-y: auto;
-            height: 100vh;
+            height: calc(100vh - 90px);
           }
         `}
         </style>
