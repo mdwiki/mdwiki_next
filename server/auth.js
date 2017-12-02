@@ -3,8 +3,8 @@ const passport = require('koa-passport');
 const GithubStrategy = require('passport-github').Strategy;
 
 const githubStrategy = new GithubStrategy({
-  clientID: config.oauth.clientId,
-  clientSecret: config.oauth.clientSecret,
+  clientID: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
   callbackURL: config.oauth.callbackUrl,
   scope: ['public_repo']
 }, (token, tokenSecret, profile, done) => {

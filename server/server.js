@@ -4,9 +4,9 @@ const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
 const mobxReact = require('mobx-react');
-const config = require('config');
 const fetch = require('node-fetch');
 const { parse } = require('url');
+const routes = require('./api/routes.js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = nextjs({ dev });
@@ -36,11 +36,6 @@ app.prepare().then(() => {
   const passport = require('koa-passport'); // eslint-disable-line
   server.use(passport.initialize());
   server.use(passport.session());
-
-  router.get('/config', async ctx => {
-    ctx.body = config.client;
-    ctx.status = 200;
-  });
 
   router.get('/auth/logout', (ctx) => {
     ctx.logout();
@@ -73,6 +68,8 @@ app.prepare().then(() => {
     ctx.body = user;
     ctx.status = 200;
   });
+
+  routes.setupRoutes(router);
 
   router.get('*', async ctx => {
     const parsedUrl = parse(ctx.req.url);

@@ -8,4 +8,4 @@ echo "Latest version pulled" >> update_mdwiki.log
 
 docker-compose down &>> update_mdwiki.log
 
-docker-compose up -d &>> update_mdwiki.log
+./start.local.sh

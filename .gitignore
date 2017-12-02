@@ -5,4 +5,5 @@ dist
 node_modules
 tags
 Session.vim
+start.local.sh
 

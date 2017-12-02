@@ -1,8 +1,8 @@
-const GITHUB_API_URL = 'https://api.github.com';
+import env from './env.service.js';
 
 class GithubService {
   constructor() {
-    this.accessToken = undefined;
+    this.hostAddress = env.host();
   }
 
   buildOptions(method = 'GET') {
@@ -21,7 +21,7 @@ class GithubService {
 
   async _get(url) {
     const options = this.buildOptions();
-    const response = await fetch(`${GITHUB_API_URL}${url}`, options);
+    const response = await fetch(`${this.hostAddress}/api${url}`, options);
     if (response.status === 200) {
       return response.json();
     }
@@ -34,7 +34,7 @@ class GithubService {
     const options = this.buildOptions('PUT');
     options.body = JSON.stringify(body);
 
-    const response = await fetch(`${GITHUB_API_URL}${url}`, options);
+    const response = await fetch(`${this.hostAddress}/api${url}`, options);
     if (EXPECTED_STATUS.some(s => s === response.status)) {
       return response.json();
     }
@@ -45,7 +45,7 @@ class GithubService {
     const options = this.buildOptions('DELETE');
     options.body = JSON.stringify(body);
 
-    const response = await fetch(`${GITHUB_API_URL}${url}`, options);
+    const response = await fetch(`${this.hostAddress}/api${url}`, options);
     if (response.status === 200) {
       return response.json();
     }

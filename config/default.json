@@ -1,9 +1,7 @@
 {
   "env": "local",
   "oauth": {
-    "callbackUrl": "http://localhost:3000/auth/github/callback",
-    "clientId": "3d99a5ff8d7eedf0bb99",
-    "clientSecret": "0668f7a0ca22286088dd671f720221c8d8d47c97"
+    "callbackUrl": "http://localhost:3000/auth/github/callback"
   },
   "client": {
     "host": "http://localhost:3000"
