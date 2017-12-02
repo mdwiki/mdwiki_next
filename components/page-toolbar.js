@@ -175,6 +175,7 @@ const Aux = props => props.children;
 
         <style jsx> {`
           .Page-toolbar {
+            display: none;
             position: fixed;
             top: 110px;
             right: 20px;
@@ -196,6 +197,7 @@ const Aux = props => props.children;
 
             @media (min-width: ${ screensizes.iPadPortrait }) {
               .Page-toolbar {
+                display: block;
                 top: 80px;
               }
             }

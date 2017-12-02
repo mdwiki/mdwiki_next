@@ -1,5 +1,6 @@
 import React from 'react';
 import { CircularProgress } from 'material-ui/Progress';
+import { screensizes } from './../common/styles/screensizes.js';
 
 const ProgressBar = () => (
   <div className="ProgressBar-container">
@@ -13,7 +14,13 @@ const ProgressBar = () => (
         background-color: #f5f7fa;
         opacity: 0.7;
         height: calc(100vh - 75px);
-        width: calc(100vw - 20px);
+        width: calc(100vw - 17px);
+      }
+
+      @media (min-width: ${ screensizes.iPadLandscape }) {
+        .ProgressBar-container {
+          width: calc(100vw - 310px);
+        }
       }
 
       :global(.progress) {
