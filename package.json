@@ -19,7 +19,7 @@
     "prepush": "yarn lint && yarn test"
   },
   "engines": {
-    "node": "9.*.*"
+    "node": ">=8.9.1"
   },
   "lint-staged": {
     "*.js": [
