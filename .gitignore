@@ -1,8 +1,10 @@
 build
 dist
+log
 .vs_code
 .next
 node_modules
+
 tags
 Session.vim
 start_local.sh
