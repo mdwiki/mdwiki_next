@@ -1,14 +1,16 @@
 FROM node:8.9.1-alpine
 
-RUN mkdir /app && mkdir /app/data
+RUN mkdir /app
 
 WORKDIR /app
 
 ADD package.json yarn.lock /app/
 
-RUN yarn install
+RUN [ "yarn", "install" ]
 
 ADD . /app/
+
+RUN ["yarn", "test"]
 
 RUN [ "yarn", "run", "build" ]
 
