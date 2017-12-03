@@ -15,11 +15,11 @@ services:
 
   mdwiki:
     image: janbaer/mdwiki:latest
+    env_file:
+      - mdwiki.env
     environment:
       - PORT=3000
       - NODE_ENV=production
-      - CLIENT_ID=${CLIENT_ID}
-      - CLIENT_SECRET=${CLIENT_SECRET}
     ports:
       - 3000:3000
     restart: always

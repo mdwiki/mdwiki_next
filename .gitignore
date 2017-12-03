@@ -6,3 +6,4 @@ node_modules
 tags
 Session.vim
 start_local.sh
+mdwiki.env
