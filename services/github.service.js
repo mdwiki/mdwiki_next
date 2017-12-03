@@ -60,7 +60,7 @@ class GithubService {
   }
 
   _encodeContent(content) {
-    return window.btoa(content);
+    return window.btoa(unescape(encodeURIComponent(content)));
   }
 
   _mapPage(page) {
