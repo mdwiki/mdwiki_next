@@ -2,35 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import SimpleMDE from 'react-simplemde-editor';
+import HotKey from 'react-shortcut';
+import MarkdownEditor from './markdown-editor.js';
 import PageStore from './../stores/page.store.js';
 import ProgressBar from './progress-bar.js';
 import PageToolbar from './page-toolbar.js';
-
-const SimpleMDEOptions = {
-  spellChecker: false,
-  status: false,
-  previewRender: false,
-  autofocus: true,
-  toolbar: [
-    'bold',
-    'italic',
-    'strikethrough',
-    'heading',
-    '|',
-    'horizontal-rule',
-    'quote',
-    'unordered-list',
-    'ordered-list',
-    '|',
-    'link',
-    'image',
-    'code',
-    '|',
-    'preview',
-    'guide'
-  ]
-};
 
 @observer export default class Page extends React.Component {
   static propTypes = {
@@ -111,20 +87,6 @@ const SimpleMDEOptions = {
     );
   }
 
-  onBeforeSavePage() {
-    let defaultCommitMessage;
-
-    if (this.simpleMDE) {
-      defaultCommitMessage = this.simpleMDE.simplemde.codemirror.getSelection();
-    }
-
-    if (!defaultCommitMessage) {
-      defaultCommitMessage = `Some changes for ${this.pageStore.page.name}`;
-    }
-
-    return defaultCommitMessage;
-  }
-
   async onDeletePage() {
     this.props.appStore.removePage(this.pageStore.page.path);
 
@@ -140,19 +102,10 @@ const SimpleMDEOptions = {
     }
 
     return (
-      <SimpleMDE
-        ref={simpleMDE => this.simpleMDE = simpleMDE} // eslint-disable-line no-return-assign
-        onChange={markdownText => this.pageStore.updatePage(markdownText)}
-        value={this.pageStore.markdownText}
-        options={SimpleMDEOptions}
-      >
-        <style jsx> {`
-          :global(.CodeMirror-scroll) {
-            height: calc(100vh - 160px);
-          }
-        `}
-        </style>
-      </SimpleMDE>
+      <MarkdownEditor
+        pageStore={this.pageStore}
+        onSavePage={commitMessage => this.onSavePage(commitMessage)}
+      />
     );
   }
 
@@ -175,6 +128,12 @@ const SimpleMDEOptions = {
     );
   }
 
+  onEditHotKeyPressed() {
+    if (!this.pageStore.isInEditMode) {
+      this.pageStore.toggleEditMode();
+    }
+  }
+
   renderToolbar() {
     if (!this.props.appStore.isLoggedIn()) {
       return null;
@@ -185,8 +144,6 @@ const SimpleMDEOptions = {
         pageStore={this.pageStore}
         onDeletePage={() => this.onDeletePage()}
         onCreatePage={pageName => this.onCreatePage(pageName)}
-        onBeforeSavePage={() => this.onBeforeSavePage()}
-        onSavePage={commitMessage => this.onSavePage(commitMessage)}
       />
     );
   }
@@ -202,6 +159,12 @@ const SimpleMDEOptions = {
 
         {this.renderPage()}
         {this.renderEditor()}
+
+        <HotKey
+          keys={['shift', 'e']}
+          simultaneous
+          onKeysCoincide={() => this.onEditHotKeyPressed()}
+        />
 
         <style jsx> {`
           .Page-container {

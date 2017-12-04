@@ -6,8 +6,7 @@ import Tooltip from 'material-ui/Tooltip';
 import AddIcon from 'material-ui-icons/Add';
 import EditIcon from 'material-ui-icons/Edit';
 import DeleteIcon from 'material-ui-icons/Delete';
-import SaveIcon from 'material-ui-icons/Save';
-import CancelIcon from 'material-ui-icons/Cancel';
+import HotKey from 'react-shortcut';
 import { screensizes } from './../common/styles/screensizes.js';
 import Dialog from './dialog.js';
 import DialogStore from './../stores/dialog.store.js';
@@ -17,23 +16,12 @@ const Aux = props => props.children;
 @observer export default class PageToolbarComponent extends React.Component {
   static propTypes = {
     pageStore: PropTypes.object.isRequired,
-    onDeletePage: PropTypes.func.isRequired,
     onCreatePage: PropTypes.func.isRequired,
-    onSavePage: PropTypes.func.isRequired,
-    onBeforeSavePage: PropTypes.func.isRequired
+    onDeletePage: PropTypes.func.isRequired,
   };
 
   newPageDialogStore = new DialogStore(true);
   deletePageDialogStore = new DialogStore();
-  savePageDialogStore = new DialogStore(true);
-
-  onNewPageNameKeydown(e) {
-    const KEY_CODE_ENTER = 13;
-    if (e.which === KEY_CODE_ENTER) {
-      this.newPageDialogStore.closeDialog(true);
-      this.onCreateNewPageDialogClosed();
-    }
-  }
 
   renderNewPageDialog() {
     return (
@@ -69,64 +57,15 @@ const Aux = props => props.children;
     }
   }
 
-  renderSavePageDialog() {
-    return (
-      <Dialog
-        title="Save changes"
-        text="Please enter a commit message for your changes"
-        store={this.savePageDialogStore}
-        onDialogClosed={() => this.onSavePageDialogClosed()}
-      />
-    );
-  }
-
-  onSavePageDialogClosed() {
-    if (this.savePageDialogStore.isConfirmed) {
-      this.props.onSavePage(this.savePageDialogStore.value);
-    }
-  }
-
   onEditButtonClicked() {
     this.props.pageStore.toggleEditMode();
   }
 
-  onCancelEditButtonClicked() {
-    this.props.pageStore.toggleEditMode();
+  onNewPageButtonClicked() {
+    this.newPageDialogStore.openDialog('New page');
   }
 
-  onSaveButtonClicked() {
-    const defaultCommitMessage = this.props.onBeforeSavePage();
-
-    this.savePageDialogStore.openDialog(defaultCommitMessage);
-  }
-
-  renderEditModeButtons() {
-    return (
-      <Aux>
-        {this.renderSavePageDialog()}
-        <Tooltip title="Cancel">
-          <IconButton
-            className="Toolbar-button"
-            aria-label="Cancel"
-            onClick={() => this.onCancelEditButtonClicked()}
-          >
-            <CancelIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Save">
-          <IconButton
-            className="Toolbar-button"
-            aria-label="Save"
-            onClick={() => this.onSaveButtonClicked()}
-          >
-            <SaveIcon />
-          </IconButton>
-        </Tooltip>
-      </Aux>
-    );
-  }
-
-  renderNonEditModeButtons() {
+  renderToolbarButtons() {
     return (
       <Aux>
         {this.renderNewPageDialog()}
@@ -136,7 +75,7 @@ const Aux = props => props.children;
           <IconButton
             className="Toolbar-button"
             aria-label="Add"
-            onClick={() => this.newPageDialogStore.openDialog('New page')}
+            onClick={() => this.onNewPageButtonClicked()}
           >
             <AddIcon />
           </IconButton>
@@ -170,8 +109,13 @@ const Aux = props => props.children;
 
     return (
       <div className="Page-toolbar">
-        {this.props.pageStore.isInEditMode && this.renderEditModeButtons()}
-        {!this.props.pageStore.isInEditMode && this.renderNonEditModeButtons()}
+        {!this.props.pageStore.isInEditMode && this.renderToolbarButtons()}
+
+        <HotKey
+          keys={['shift', 'n']}
+          simultaneous
+          onKeysCoincide={() => this.onNewPageButtonClicked()}
+        />
 
         <style jsx> {`
           .Page-toolbar {
@@ -201,7 +145,6 @@ const Aux = props => props.children;
                 top: 80px;
               }
             }
-
           }
         `}
         </style>
