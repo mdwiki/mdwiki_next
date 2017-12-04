@@ -61,7 +61,7 @@ export default class PageStore {
   createPage(user, repository, pageName) {
     const content = `# ${pageName}`;
     const commitMessage = `Create new page ${pageName}`;
-    const path = `${pageName.replace(' ', '')}.md`;
+    const path = `${pageName.replace(' ', '_')}.md`.toLowerCase();
 
     return github.createOrUpdatePage(
       user,

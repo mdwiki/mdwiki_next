@@ -69,7 +69,9 @@ const Aux = props => props.children;
     }
 
     if (!defaultCommitMessage) {
-      defaultCommitMessage = `Some changes for ${this.props.pageStore.page.name}`;
+      let pageName = this.props.pageStore.page.name;
+      pageName = pageName.substr(0, pageName.length - 3);
+      defaultCommitMessage = `Some changes for ${pageName}`;
     }
 
     this.savePageDialogStore.openDialog(defaultCommitMessage);

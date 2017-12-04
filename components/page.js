@@ -68,6 +68,8 @@ import PageToolbar from './page-toolbar.js';
 
     await this.loadPage(newPage.path);
     this.props.appStore.addPage(this.pageStore.page);
+
+    this.pageStore.toggleEditMode();
   }
 
   async onSavePage(commitMessage) {
