@@ -112,7 +112,7 @@ const Aux = props => props.children;
         {!this.props.pageStore.isInEditMode && this.renderToolbarButtons()}
 
         <HotKey
-          keys={['shift', 'n']}
+          keys={['shift', 'm']}
           simultaneous
           onKeysCoincide={() => this.onNewPageButtonClicked()}
         />
