@@ -50,7 +50,8 @@
     "react-dom": "16.2.0",
     "react-shortcut": "1.0.6",
     "react-simplemde-editor": "3.6.11",
-    "react-tap-event-plugin": "3.0.2"
+    "react-tap-event-plugin": "3.0.2",
+    "sw-toolbox": "3.6.0"
   },
   "devDependencies": {
     "babel-eslint": "8.0.3",

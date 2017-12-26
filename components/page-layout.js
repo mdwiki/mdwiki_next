@@ -128,6 +128,7 @@ export default class PageLayout extends React.Component {
           <link rel="stylesheet" href="static/styles/styles.css" />
           <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon" />
           <link rel="apple-touch-icon" href="static/images/wiki.png" />
+          <script src="static/scripts/register-service-worker.js" />
         </Head>
         <AppBar className="AppBar">
           <Toolbar className="Toolbar">

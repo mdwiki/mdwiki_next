@@ -1,5 +1,7 @@
 const Koa = require('koa');
 const nextjs = require('next');
+const fs = require('fs');
+const util = require('util');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
@@ -7,6 +9,8 @@ const mobxReact = require('mobx-react');
 const fetch = require('node-fetch');
 const { parse } = require('url');
 const routes = require('./api/routes.js');
+
+const readFile = util.promisify(fs.readFile);
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = nextjs({ dev });
@@ -66,6 +70,13 @@ app.prepare().then(() => {
     user.isAuthenticated = user.name !== undefined;
 
     ctx.body = user;
+    ctx.status = 200;
+  });
+
+  router.get('/service-worker.js', async ctx => {
+    const data = await readFile(`${__dirname}/service-worker.js`, 'utf8');
+    ctx.type = 'application/javascript; charset=UTF-8';
+    ctx.body = data;
     ctx.status = 200;
   });
 

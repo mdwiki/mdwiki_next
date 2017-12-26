@@ -10,16 +10,20 @@ if [ -n "${CONTAINER_ID}" ]; then
 fi
 
 if [ "${ENV}" = "production" ]; then
-  docker run -d -p ${PORT}:${PORT}       \
-            --name ${CONTAINER_NAME}     \
-            --restart=always             \
-            -e PORT=${PORT}              \
-            -e NODE_ENV=${ENV}           \
+  docker run -d -p ${PORT}:${PORT}            \
+            --name ${CONTAINER_NAME}          \
+            --restart=always                  \
+            -e PORT=${PORT}                   \
+            -e NODE_ENV=${ENV}                \
+            -e CLIENT_ID=${CLIENT_ID}         \
+            -e CLIENT_SECRET=${CLIENT_SECRET} \
             ${IMAGE_NAME}:latest
 else
-  docker run -p ${PORT}:3333             \
-             --rm -it                    \
-            --name ${CONTAINER_NAME}     \
-            -e NODE_ENV=${ENV}           \
+  docker run -p ${PORT}:3333                  \
+             --rm -it                         \
+            --name ${CONTAINER_NAME}          \
+            -e NODE_ENV=${ENV}                \
+            -e CLIENT_ID=${CLIENT_ID}         \
+            -e CLIENT_SECRET=${CLIENT_SECRET} \
             ${IMAGE_NAME}:latest
 fi
