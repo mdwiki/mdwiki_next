@@ -9,3 +9,4 @@ tags
 Session.vim
 start_local.sh
 mdwiki.env
+docker-run-local.sh
