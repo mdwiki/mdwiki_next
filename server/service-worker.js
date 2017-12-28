@@ -39,7 +39,7 @@ if (ENV === 'production') {
   self.toolbox.precache(filesToPrecache);
   self.toolbox.router.get(`${HOST_ADDRESS}/(.*)`, self.toolbox.cacheFirst);
 
-  self.toolbox.router.get(/^https:\/\/www.mdwiki.com\/api\//, self.toolbox.networkFirst, {
+  self.toolbox.router.get(/^https:\/\/www.mdwiki.net\/api\//, self.toolbox.networkFirst, {
     cache: { name: GITHUB_CACHE_NAME }
   });
 }
