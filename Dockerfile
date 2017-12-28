@@ -14,6 +14,10 @@ RUN ["yarn", "test"]
 
 RUN [ "yarn", "run", "build" ]
 
+ENV NODE_ENV production
+
+RUN ["node", "post-build.js"]
+
 EXPOSE 3000
 
 CMD [ "node", "server/server.js" ]
