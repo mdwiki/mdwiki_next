@@ -5,7 +5,9 @@ const buildId = 'BUILD_ID';
 const appJSHash = 'APPJS_HASH';
 const ENV = 'NODE_ENV';
 
-const APP_CACHE_NAME = 'mdwiki-cache-v1';
+const APP_CACHE_NAME = 'mdwiki-cache-v2';
+const GITHUB_CACHE_NAME = 'mdwiki-github-cache';
+const HOST_ADDRESS = 'https://www.mdwiki.net';
 
 const filesToPrecache = [
   './index',
@@ -27,10 +29,6 @@ const filesToPrecache = [
   'https://fonts.gstatic.com/s/roboto/v18/CWB0XYA8bzo0kSThX0UTuA.woff2',
   'https://fonts.gstatic.com/s/roboto/v18/RxZJdnzeo3R5zSexge8UUVtXRa8TVwTICgirnJhmVJw.woff2'
 ];
-
-const GITHUB_CACHE_NAME = 'mdwiki-github-cache';
-const HOST_ADDRESS = 'http://localhost:3000';
-
 
 if (ENV === 'production') {
   importScripts('./../static/scripts/sw-toolbox.js');
