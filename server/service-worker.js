@@ -29,12 +29,10 @@ const apiCacheRule = /^\/api\//;
 self.addEventListener('install', event => {
   const precachePromise = addToCache(EXTERNALS_CACHE_NAME, externalLibraries);
   event.waitUntil(precachePromise);
-  console.log('ServiceWorker successful installed');
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(cleanOldCaches());
-  console.log('ServiceWorker successfully activated');
 });
 
 self.addEventListener('fetch', event => {
@@ -59,7 +57,6 @@ async function handleFetch(request) {
     return networkFirst(API_CACHE_NAME, requestUrl, requestUrl.pathname);
   }
 
-  console.log('Fetch without cache', requestUrl.origin, requestUrl.pathname);
   return fetch(request);
 }
 
@@ -93,13 +90,16 @@ async function addToCache(cacheName, filesToCache) {
 async function cacheFirst(cacheName, request, cacheKey = request) {
   const cache = await caches.open(cacheName);
 
-  let response = await cache.match(cacheKey);
-  if (!response) {
-    response = await fetch(request);
-    cache.put(cacheKey, response.clone());
+  const responseFromCache = await cache.match(cacheKey);
+  if (responseFromCache) {
+    return responseFromCache;
   }
 
-  return response;
+  return fetch(request)
+    .then(response => {
+      cache.put(cacheKey, response.clone());
+      return response;
+    });
 }
 
 async function networkFirst(cacheName, request, cacheKey) {
@@ -120,7 +120,6 @@ async function cleanOldCaches() {
 
   const cachesToDelete = existingCacheKeys.filter(key => !activeCacheKeys.includes(key));
   if (cachesToDelete.length > 0) {
-    console.log('Delete the following old caches', cachesToDelete);
     return Promise.all(cachesToDelete.map(key => caches.delete(key)));
   }
   return undefined;
