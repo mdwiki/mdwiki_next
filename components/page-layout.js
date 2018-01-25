@@ -8,6 +8,7 @@ import AccountIcon from 'material-ui-icons/AccountCircle';
 import Drawer from 'material-ui/Drawer';
 import classNames from 'classnames';
 
+import ErrorBoundary from './error-boundary.js';
 import GithubIcon from './github-icon.js';
 import SearchButton from './search-button.js';
 import UserIcon from './user-icon.js';
@@ -111,41 +112,43 @@ export default class PageLayout extends React.Component {
   render() {
     return (
       <div className={classNames('Main-container', { 'show-sidebar': this.props.showSidebar })}>
-        <AppBar className="AppBar">
-          <Toolbar className="Toolbar">
-            <IconButton
-              className="ToggleSidebar-button"
-              color="contrast"
-              aria-label="Menu"
-              onClick={() => this.toggleLeftSidebar()}
-            >
-              <MenuIcon />
-            </IconButton>
-            <div className="AppTitle">
-              <button className="Logo-button" onClick={() => this.goHome()}>
-                <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" />
-              </button>
-            </div>
-            <SearchButton appStore={this.props.appStore} />
-            <IconButton
-              title="Connect to a Github repository"
-              color="contrast"
-              aria-label="Connect"
-              onClick={() => this.connect(this.props.appStore)}
-            >
-              <GithubIcon />
-            </IconButton>
-            {!this.isUserLoggedIn() && this.renderLoginButton()}
-            {this.isUserLoggedIn() && this.renderLogoutButton()}
-          </Toolbar>
-        </AppBar>
+        <ErrorBoundary>
+          <AppBar className="AppBar">
+            <Toolbar className="Toolbar">
+              <IconButton
+                className="ToggleSidebar-button"
+                color="contrast"
+                aria-label="Menu"
+                onClick={() => this.toggleLeftSidebar()}
+              >
+                <MenuIcon />
+              </IconButton>
+              <div className="AppTitle">
+                <button className="Logo-button" onClick={() => this.goHome()}>
+                  <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" />
+                </button>
+              </div>
+              <SearchButton appStore={this.props.appStore} />
+              <IconButton
+                title="Connect to a Github repository"
+                color="contrast"
+                aria-label="Connect"
+                onClick={() => this.connect(this.props.appStore)}
+              >
+                <GithubIcon />
+              </IconButton>
+              {!this.isUserLoggedIn() && this.renderLoginButton()}
+              {this.isUserLoggedIn() && this.renderLogoutButton()}
+            </Toolbar>
+          </AppBar>
 
-        { this.props.showSidebar && this.renderMobileSidebar(this.props.appStore) }
-        { this.props.showSidebar && this.renderStaticSidebar(this.props.appStore) }
+          { this.props.showSidebar && this.renderMobileSidebar(this.props.appStore) }
+          { this.props.showSidebar && this.renderStaticSidebar(this.props.appStore) }
 
-        <div className="AppContent-container">
-          { this.props.children }
-        </div>
+          <div className="AppContent-container">
+            { this.props.children }
+          </div>
+        </ErrorBoundary>
 
         <style jsx> {`
           :global(.AppTitle) {
