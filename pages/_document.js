@@ -20,7 +20,9 @@ export default class Document extends NextDocument {
           <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon" />
           <link rel="apple-touch-icon" href="static/images/wiki.png" />
           <link rel="dns-prefetch" href="//www.janbaer.de" />
-          <script src="static/scripts/register-service-worker.js" />
+          <script async src="static/scripts/register-service-worker.js" />
+          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113133677-1" />
+          <script async src="static/scripts/gtag.js" />
         </Head>
         <body>
           <Main />

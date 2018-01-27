@@ -1,9 +1,9 @@
 {
   "name": "mdwiki",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A simple markdown based wiki",
   "main": "./server/server.js",
-  "repository": "",
+  "repository": "https://github.com/mdwiki/mdwiki_next",
   "author": "Jan Baer <jan@janbaer.de>",
   "license": "MIT",
   "scripts": {
