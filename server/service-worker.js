@@ -28,7 +28,8 @@ const apiCacheRule = /^\/api\//;
 
 self.addEventListener('install', event => {
   const precachePromise = addToCache(EXTERNALS_CACHE_NAME, externalLibraries);
-  event.waitUntil(precachePromise);
+
+  event.waitUntil(precachePromise.then(() => notifyUpdate()));
 });
 
 self.addEventListener('activate', event => {
@@ -38,6 +39,14 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   event.respondWith(handleFetch(event.request));
 });
+
+
+async function notifyUpdate() {
+  const allClients = await clients.matchAll({ includeUncontrolled: true, type: 'window' });
+  for (const client of allClients) {
+    client.postMessage({ type: 'update' });
+  }
+}
 
 async function handleFetch(request) {
   const requestUrl = new URL(request.url);
