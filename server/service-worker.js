@@ -11,7 +11,7 @@ const externalLibraries = [
   'https://fonts.googleapis.com/css?family=Roboto:300,400,500',
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   'https://fonts.gstatic.com/s/roboto/v18/CWB0XYA8bzo0kSThX0UTuA.woff2',
-  'https://fonts.gstatic.com/s/roboto/v18/RxZJdnzeo3R5zSexge8UUVtXRa8TVwTICgirnJhmVJw.woff2'
+  'https://fonts.gstatic.com/s/roboto/v18/RxZJdnzeo3R5zSexge8UUVtXRa8TVwTICgirnJhmVJw.woff2',
 ];
 
 const cacheRules = [
@@ -22,6 +22,11 @@ const cacheRules = [
   /^\/_next\//,
   /^\/static\//,
   /^\/index\//
+];
+
+const excludeRules = [
+  /\/service-worker.js$/,
+  /_next\/on-demand-entries-ping$/
 ];
 
 const apiCacheRule = /^\/api\//;
@@ -52,7 +57,8 @@ async function handleFetch(request) {
   const requestUrl = new URL(request.url);
 
   if (isExternalRequest(requestUrl)) {
-    return cacheFirst(EXTERNALS_CACHE_NAME, request);
+    // All external requests should be fetched within the install event
+    return fetch(request);
   }
 
   if (shouldRequestBeCached(requestUrl)) {
@@ -74,16 +80,26 @@ async function isApiRequest(requestUrl) {
 }
 
 function shouldRequestBeCached(requestUrl) {
-  let shouldBeCached = false;
-
-  for (const cacheRule of cacheRules) {
-    shouldBeCached = cacheRule.exec(requestUrl.pathname) !== null;
-    if (shouldBeCached) {
-      break;
-    }
+  let shouldBeCached = isAnyRuleMatching(cacheRules, requestUrl.pathname);
+  if (shouldBeCached && isAnyRuleMatching(excludeRules, requestUrl.pathname)) {
+    shouldBeCached = false;
   }
 
   return shouldBeCached;
+}
+
+function isAnyRuleMatching(rules, value) {
+  for (const rule of rules) {
+    if (applyRule(rule, value)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function applyRule(rule, value) {
+  return rule.exec(value) !== null;
 }
 
 function isExternalRequest(requestUrl) {
@@ -97,6 +113,7 @@ async function addToCache(cacheName, filesToCache) {
 }
 
 async function cacheFirst(cacheName, request, cacheKey = request) {
+  console.log('cacheFirst', cacheName, cacheKey);
   const cache = await caches.open(cacheName);
 
   const responseFromCache = await cache.match(cacheKey);

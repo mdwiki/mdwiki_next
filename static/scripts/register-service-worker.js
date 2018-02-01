@@ -14,7 +14,7 @@ if ('serviceWorker' in window.navigator) {
     if (event.data.type === 'update') {
       if (window.Notification.permission === 'granted') {
         const notification = new window.Notification('MDWiki Update', {
-          icon: 'https://www.mdwiki.net/static/images/wiki.png',
+          icon: 'static/images/wiki.png',
           body: 'We updated MDWiki, you should refresh you browser to use the latest version'
         });
 
