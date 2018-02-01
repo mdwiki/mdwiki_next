@@ -41,7 +41,7 @@ import { screensizes } from './../common/styles/screensizes.js';
         </IconButton>
         <input
           placeholder="Search..."
-          value={this.props.appStore.searchTerm}
+          value={this.props.appStore.searchTerm || ''}
           onChange={e => this.changeSearchTerm(e.target.value)}
           onKeyDown={e => this.onInputKeydown(e)}
         />
