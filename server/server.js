@@ -19,7 +19,7 @@ const PORT = process.env.NODE_ENV === 'production' ? process.env.PORT : 3000;
 
 global.host = dev ? `http://localhost:${PORT}` : 'https://www.mdwiki.net';
 
-const PAGE_NAMES = ['_next', 'index', 'connect', 'search', 'login'];
+const PAGE_NAMES = ['_next', 'static', 'connect', 'search', 'login'];
 
 mobxReact.useStaticRendering(true);
 
@@ -82,19 +82,28 @@ app.prepare().then(() => {
 
   routes.setupRoutes(router);
 
+  router.get('/', async ctx => {
+    if (!ctx.query.page) {
+      await app.render(ctx.req, ctx.res, '/', { page: 'index' });
+    } else {
+      await handle(ctx.req, ctx.res);
+    }
+    ctx.respond = false;
+  });
+
   router.get('*', async ctx => {
     const parsedUrl = parse(ctx.req.url);
     const { pathname } = parsedUrl;
+
     const pageName = getPageName(pathname);
     const isExistingPage = PAGE_NAMES.some(p => p === pageName);
 
     if (!isExistingPage) {
-      await app.render(ctx.req, ctx.res, '/', { name: pageName });
+      ctx.redirect(`/?page=${pageName}`);
     } else {
       await handle(ctx.req, ctx.res);
+      ctx.respond = false;
     }
-
-    ctx.respond = false;
   });
 
   server.use(async (ctx, next) => {
@@ -113,6 +122,8 @@ app.prepare().then(() => {
 function getPageName(pathname) {
   if (pathname === '/') {
     return 'index';
+  } else if (pathname.startsWith('/static')) {
+    return 'static';
   } else if (pathname.startsWith('/_next')) {
     return '_next';
   }

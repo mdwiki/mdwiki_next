@@ -42,20 +42,9 @@ import PageToolbar from './page-toolbar.js';
     }
   }
 
-  updateLocation(path) {
-    if (window) {
-      const location = window.location;
-      const newUrl = `${location.origin}/${path}`;
-      if (newUrl !== location.href) {
-        window.history.replaceState({}, 'PageChange', newUrl);
-      }
-    }
-  }
-
   async loadPage(path) {
     const settings = this.props.appStore.settings;
     await this.pageStore.loadPage(settings.user, settings.repository, path);
-    this.updateLocation(path.substr(0, path.length - 3));
   }
 
   async onCreatePage(pageName) {
@@ -95,7 +84,7 @@ import PageToolbar from './page-toolbar.js';
     const { settings } = this.props.appStore;
     await this.pageStore.deletePage(settings.user, settings.repository);
 
-    await this.loadPage('index.md');
+    await this.loadPage('index');
   }
 
   renderEditor() {

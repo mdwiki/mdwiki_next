@@ -2,6 +2,7 @@ import { action, observable } from 'mobx';
 import env from './../services/env.service.js';
 import storage from './../services/storage.service.js';
 import github from './../services/github.service.js';
+import pageListFilter from './../common/helpers/page-list-filter.js';
 
 let appStore = null;
 
@@ -56,16 +57,17 @@ class AppStore {
     return page1.name.localeCompare(page2.name);
   }
 
+  @action async loadPages() {
+    const pages = await github.getPages(this.settings.user, this.settings.repository);
+    this.setPages(pages);
+  }
+
   @action setPages(pages) {
     pages.sort(this._compareByName);
-    this.pages = pages;
+    this.pages = pages.filter(pageListFilter);
   }
 
   @action addPage(page) {
-    if (page.path === 'index.md') {
-      return; // The index page we wont show in the list
-    }
-
     const pages = this.pages.slice();
     pages.push(page);
     this.setPages(pages);

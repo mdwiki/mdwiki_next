@@ -2,11 +2,11 @@ import Router from 'next/router';
 
 class NavigatorService {
   goHome() {
-    return this.gotoPage('index.md');
+    return this.gotoPage('index');
   }
 
   gotoPage(pageName) {
-    Router.push({ pathname: '/', query: { name: pageName } });
+    Router.push({ pathname: '/', query: { page: pageName } });
   }
 
   gotoSearchPage(searchTerm) {

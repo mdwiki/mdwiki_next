@@ -66,7 +66,7 @@ class GithubService {
   _mapPage(page) {
     if (page) {
       return {
-        name: page.name,
+        name: page.name.substr(0, page.name.length - 3),
         path: page.path,
         sha: page.sha,
         content: this._decodeContent(page.content)
@@ -75,18 +75,20 @@ class GithubService {
     return undefined;
   }
 
-  fetchPages(userName, repository) {
+  async getPages(userName, repository) {
     const url = `/repos/${userName}/${repository}/contents`;
-    return this._get(url);
+    const pages = await this._get(url);
+
+    return pages.map(page => this._mapPage(page));
   }
 
   async getPage(userName, repository, path) {
-    const page = await this._get(`/repos/${userName}/${repository}/contents/${path}`);
+    const page = await this._get(`/repos/${userName}/${repository}/contents/${this.appendExtension(path)}`);
     return this._mapPage(page);
   }
 
   async createOrUpdatePage(userName, repository, path, pageContent, commitMessage, sha) {
-    const url = `/repos/${userName}/${repository}/contents/${path}`;
+    const url = `/repos/${userName}/${repository}/contents/${this.appendExtension(path)}`;
     const body = {
       message: commitMessage,
       content: this._encodeContent(pageContent),
@@ -97,8 +99,8 @@ class GithubService {
     return this._mapPage(response.content);
   }
 
-  deletePage(userName, repository, itemPath, commitMessage, sha) {
-    const url = `/repos/${userName}/${repository}/contents/${itemPath}`;
+  deletePage(userName, repository, path, commitMessage, sha) {
+    const url = `/repos/${userName}/${repository}/contents/${this.appendExtension(path)}`;
     const body = {
       message: commitMessage,
       sha
@@ -106,9 +108,11 @@ class GithubService {
     return this._delete(url, body);
   }
 
-  searchPages(userName, repository, searchTerm) {
+  async searchPages(userName, repository, searchTerm) {
     const searchUrl = `/search/code?q=${escape(searchTerm)}+in:file+extension:md+repo:${userName}/${repository}`;
-    return this._get(searchUrl);
+    const searchResult = await this._get(searchUrl);
+    searchResult.items = searchResult.items.map(page => this._mapPage(page));
+    return searchResult;
   }
 
   async getUser(userName) {
@@ -129,6 +133,13 @@ class GithubService {
       console.log('Error while fetching repository', userName, repositoryName);
       return undefined;
     }
+  }
+
+  appendExtension(path) {
+    if (!path.endsWith('.md')) {
+      return `${path}.md`;
+    }
+    return path;
   }
 }
 

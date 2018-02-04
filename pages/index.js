@@ -25,10 +25,7 @@ import Page from './../components/page.js';
       return null;
     }
 
-    let pageName = this.props.pageName || 'index.md';
-    if (!pageName.endsWith('.md')) {
-      pageName += '.md';
-    }
+    const pageName = this.props.pageName || 'index';
 
     return (
       <PageLayout appStore={this.appStore}>

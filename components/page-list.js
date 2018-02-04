@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
-import github from './../services/github.service.js';
 import groupPages from './../common/helpers/page-grouper.js';
-import pageListFilter from './../common/helpers/page-list-filter.js';
+import navigationService from './../services/navigator.service.js';
 
 @observer export default class PageList extends React.Component {
   static propTypes = {
@@ -12,25 +11,19 @@ import pageListFilter from './../common/helpers/page-list-filter.js';
   };
 
   componentDidMount() {
-    this.fetchPages(this.props.appStore);
+    this.loadPages(this.props.appStore);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.fetchPages(nextProps.appStore);
+    this.loadPages(nextProps.appStore);
   }
 
-  async fetchPages(appStore) {
-    if (appStore.settings && appStore.settings.user) {
-      const pages = await github.fetchPages(
-        appStore.settings.user,
-        appStore.settings.repository
-      );
-
-      appStore.setPages(pages.filter(pageListFilter));
-    }
+  loadPages(appStore) {
+    return appStore.loadPages();
   }
 
   onPageClicked(page) {
+    navigationService.gotoPage(page.name);
     this.props.appStore.changeSelectedPage(page.name);
   }
 
@@ -39,7 +32,7 @@ import pageListFilter from './../common/helpers/page-list-filter.js';
       <ListItem button key={page.name}>
         <ListItemText
           className="PageNameText"
-          primary={page.name.substr(0, page.name.length - 3)}
+          primary={page.name}
           onClick={() => this.onPageClicked(page)}
         />
       </ListItem>

@@ -53,7 +53,7 @@ export default class PageLayout extends React.Component {
 
   goHome() {
     navigator.goHome();
-    this.props.appStore.selectedPage = 'index.md';
+    this.props.appStore.changeSelectedPage('index');
   }
 
   renderStaticSidebar(appStore) {
