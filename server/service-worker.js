@@ -16,12 +16,10 @@ const externalLibraries = [
 
 const cacheRules = [
   /^\/$/,
-  /^\/index$/,
   /^\/connect$/,
   /^\/search$/,
   /^\/_next\//,
   /^\/static\//,
-  /^\/index\//
 ];
 
 const excludeRules = [
@@ -75,8 +73,8 @@ async function handleFetch(request) {
   return fetch(request);
 }
 
-async function isApiRequest(requestUrl) {
-  return apiCacheRule.exec(requestUrl.pathname) !== null;
+function isApiRequest(requestUrl) {
+  return Boolean(apiCacheRule.exec(requestUrl.pathname));
 }
 
 function shouldRequestBeCached(requestUrl) {
@@ -113,7 +111,6 @@ async function addToCache(cacheName, filesToCache) {
 }
 
 async function cacheFirst(cacheName, request, cacheKey = request) {
-  console.log('cacheFirst', cacheName, cacheKey);
   const cache = await caches.open(cacheName);
 
   const responseFromCache = await cache.match(cacheKey);
@@ -150,3 +147,4 @@ async function cleanOldCaches() {
   }
   return undefined;
 }
+
