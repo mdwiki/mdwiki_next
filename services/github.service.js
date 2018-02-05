@@ -79,7 +79,7 @@ class GithubService {
     const url = `/repos/${userName}/${repository}/contents`;
     const pages = await this._get(url);
 
-    return pages.map(page => this._mapPage(page));
+    return pages.filter(this._markdownFilesOnly).map(page => this._mapPage(page));
   }
 
   async getPage(userName, repository, path) {
@@ -140,6 +140,10 @@ class GithubService {
       return `${path}.md`;
     }
     return path;
+  }
+
+  _markdownFilesOnly(page) {
+    return page.name.endsWith('.md');
   }
 }
 
