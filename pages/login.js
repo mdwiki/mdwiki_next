@@ -1,5 +1,5 @@
 import React from 'react';
-import { initAppStore } from './../stores/app.store.js';
+import appStore from './../stores/app.store.js';
 import github from './../services/github.service.js';
 import navigator from './../services/navigator.service.js';
 
@@ -25,7 +25,7 @@ export default class LoginPage extends React.Component {
 
     if (user.isLoggedIn) {
       user.avatarUrl = await this.readUserAvatarUrl(user.name, user.accessToken);
-      this.appStore = initAppStore(user);
+      appStore.setUser(user);
 
       navigator.goHome();
     } else {

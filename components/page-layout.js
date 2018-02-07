@@ -14,13 +14,13 @@ import SearchButton from './search-button.js';
 import UserIcon from './user-icon.js';
 import PageList from './page-list.js';
 import navigator from './../services/navigator.service.js';
+import appStore from './../stores/app.store.js';
 
 import { screensizes } from './../common/styles/screensizes.js';
 
 export default class PageLayout extends React.Component {
   static propTypes = {
     children: PropTypes.any.isRequired,
-    appStore: PropTypes.object.isRequired,
     showSidebar: PropTypes.bool
   };
 
@@ -38,7 +38,7 @@ export default class PageLayout extends React.Component {
     this.setState({ showLeftSidebar: !showLeftSidebar });
   }
 
-  connect(appStore) {
+  connect() {
     const { user, repository } = appStore.settings;
     navigator.gotoConnectPage(user, repository);
   }
@@ -53,18 +53,17 @@ export default class PageLayout extends React.Component {
 
   goHome() {
     navigator.goHome();
-    this.props.appStore.changeSelectedPage('index');
   }
 
-  renderStaticSidebar(appStore) {
+  renderStaticSidebar() {
     return (
       <div className="Sidebar">
-        <PageList appStore={appStore} />
+        <PageList />
       </div>
     );
   }
 
-  renderMobileSidebar(appStore) {
+  renderMobileSidebar() {
     return (
       <Drawer
         className="LeftSidebar"
@@ -74,7 +73,7 @@ export default class PageLayout extends React.Component {
         onRequestClose={() => this.toggleLeftSidebar()}
         onClick={() => this.toggleLeftSidebar()}
       >
-        <PageList appStore={appStore} />
+        <PageList />
       </Drawer>
     );
   }
@@ -91,7 +90,7 @@ export default class PageLayout extends React.Component {
   }
 
   renderLogoutButton() {
-    const user = this.props.appStore.user || {};
+    const user = appStore.user || {};
 
     return (
       <IconButton
@@ -106,7 +105,7 @@ export default class PageLayout extends React.Component {
   }
 
   isUserLoggedIn() {
-    return this.props.appStore.user && this.props.appStore.user.isLoggedIn;
+    return appStore.user && appStore.user.isLoggedIn;
   }
 
   render() {
@@ -128,12 +127,12 @@ export default class PageLayout extends React.Component {
                   <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" />
                 </button>
               </div>
-              <SearchButton appStore={this.props.appStore} />
+              <SearchButton />
               <IconButton
                 title="Connect to a Github repository"
                 color="contrast"
                 aria-label="Connect"
-                onClick={() => this.connect(this.props.appStore)}
+                onClick={() => this.connect()}
               >
                 <GithubIcon />
               </IconButton>

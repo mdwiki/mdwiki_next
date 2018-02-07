@@ -4,8 +4,6 @@ import storage from './../services/storage.service.js';
 import github from './../services/github.service.js';
 import pageListFilter from './../common/helpers/page-list-filter.js';
 
-let appStore = null;
-
 const defaultSettings = { user: 'mdwiki', repository: 'wiki' };
 
 class AppStore {
@@ -16,11 +14,13 @@ class AppStore {
   @observable pages = null;
   @observable selectedPage = null;
 
-  constructor(isServer) {
-    this.isServer = isServer;
+  constructor() {
+    if (env.isClient()) {
+      this.readFromStorage();
+    }
   }
 
-  @action setUser(user) {
+  @action setUser(user = { isLoggedIn: false }) {
     this.user = user;
     this.saveToStorage();
 
@@ -53,10 +53,6 @@ class AppStore {
     this.selectedPage = page;
   }
 
-  _compareByName(page1, page2) {
-    return page1.name.localeCompare(page2.name);
-  }
-
   @action async loadPages() {
     const pages = await github.getPages(this.settings.user, this.settings.repository);
     this.setPages(pages);
@@ -86,26 +82,10 @@ class AppStore {
   isLoggedIn() {
     return this.user && this.user.isLoggedIn;
   }
+
+  _compareByName(page1, page2) {
+    return page1.name.localeCompare(page2.name);
+  }
 }
 
-export function initAppStore(user) {
-  const isServer = env.isServer();
-  if (isServer) {
-    return new AppStore(isServer);
-  }
-
-  if (appStore === null) {
-    appStore = new AppStore(isServer);
-    appStore.readFromStorage();
-
-    github.accessToken = appStore.user.accessToken;
-    window.APP_STORE = appStore;
-  }
-
-  if (user) {
-    appStore.setUser(user);
-  }
-
-  return appStore;
-}
-
+export default new AppStore();

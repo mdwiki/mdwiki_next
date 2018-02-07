@@ -1,4 +1,5 @@
 import env from './env.service.js';
+import appStore from './../stores/app.store.js';
 
 class GithubService {
   constructor() {
@@ -11,12 +12,21 @@ class GithubService {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    if (this.accessToken) {
-      headers.append('Authorization', `token ${this.accessToken}`);
+    const accessToken = this._getAccessToken();
+    if (accessToken) {
+      headers.append('Authorization', `token ${accessToken}`);
     }
 
     options.headers = headers;
     return options;
+  }
+
+  _getAccessToken() {
+    if (appStore.user && appStore.user.isLoggedIn) {
+      return appStore.user.accessToken;
+    }
+
+    return undefined;
   }
 
   async _get(url) {
@@ -79,16 +89,16 @@ class GithubService {
     const url = `/repos/${userName}/${repository}/contents`;
     const pages = await this._get(url);
 
-    return pages.map(page => this._mapPage(page));
+    return pages.filter(this._markdownFilesOnly).map(page => this._mapPage(page));
   }
 
   async getPage(userName, repository, path) {
-    const page = await this._get(`/repos/${userName}/${repository}/contents/${this.appendExtension(path)}`);
+    const page = await this._get(`/repos/${userName}/${repository}/contents/${this._appendExtension(path)}`);
     return this._mapPage(page);
   }
 
   async createOrUpdatePage(userName, repository, path, pageContent, commitMessage, sha) {
-    const url = `/repos/${userName}/${repository}/contents/${this.appendExtension(path)}`;
+    const url = `/repos/${userName}/${repository}/contents/${this._appendExtension(path)}`;
     const body = {
       message: commitMessage,
       content: this._encodeContent(pageContent),
@@ -100,7 +110,7 @@ class GithubService {
   }
 
   deletePage(userName, repository, path, commitMessage, sha) {
-    const url = `/repos/${userName}/${repository}/contents/${this.appendExtension(path)}`;
+    const url = `/repos/${userName}/${repository}/contents/${this._appendExtension(path)}`;
     const body = {
       message: commitMessage,
       sha
@@ -135,11 +145,15 @@ class GithubService {
     }
   }
 
-  appendExtension(path) {
+  _appendExtension(path) {
     if (!path.endsWith('.md')) {
       return `${path}.md`;
     }
     return path;
+  }
+
+  _markdownFilesOnly(page) {
+    return page.name.endsWith('.md');
   }
 }
 

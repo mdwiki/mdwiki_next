@@ -1,25 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import Router from 'next/router';
 import IconButton from 'material-ui/IconButton';
 import SearchIcon from 'material-ui-icons/Search';
 import { screensizes } from './../common/styles/screensizes.js';
+import appStore from './../stores/app.store.js';
 
 @observer export default class SearchButton extends React.Component {
-  static propTypes = {
-    appStore: PropTypes.object.isRequired
-  };
-
   onSearchClicked() {
     Router.push({
       pathname: '/search',
-      query: { searchTerm: this.props.appStore.searchTerm }
+      query: { searchTerm: appStore.searchTerm }
     });
   }
 
   changeSearchTerm(searchTerm) {
-    this.props.appStore.changeSearchTerm(searchTerm);
+    appStore.changeSearchTerm(searchTerm);
   }
 
   onInputKeydown(e) {
@@ -41,7 +37,7 @@ import { screensizes } from './../common/styles/screensizes.js';
         </IconButton>
         <input
           placeholder="Search..."
-          value={this.props.appStore.searchTerm || ''}
+          value={appStore.searchTerm || ''}
           onChange={e => this.changeSearchTerm(e.target.value)}
           onKeyDown={e => this.onInputKeydown(e)}
         />

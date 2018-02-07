@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import HotKey from 'react-shortcut';
@@ -7,27 +6,20 @@ import MarkdownEditor from './markdown-editor.js';
 import PageStore from './../stores/page.store.js';
 import ProgressBar from './progress-bar.js';
 import PageToolbar from './page-toolbar.js';
+import appStore from './../stores/app.store.js';
 
 @observer export default class Page extends React.Component {
-  static propTypes = {
-    appStore: PropTypes.object.isRequired,
-    pageName: PropTypes.string.isRequired
-  };
-
-  constructor(props) {
-    super(props);
-    this.pageStore = new PageStore();
-  }
+  pageStore = new PageStore();
 
   async componentDidMount() {
-    if (this.props.pageName) {
-      await this.loadPage(this.props.pageName);
-
-      this.unregisterReaction = reaction(
-        () => this.props.appStore.selectedPage,
-        pageName => this.loadPage(pageName)
-      );
+    if (appStore.selectedPage) {
+      await this.loadPage(appStore.selectedPage);
     }
+
+    this.unregisterReaction = reaction(
+      () => appStore.selectedPage,
+      pageName => this.loadPage(pageName)
+    );
   }
 
   componentWillUnmount() {
@@ -36,19 +28,13 @@ import PageToolbar from './page-toolbar.js';
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.pageName !== this.props.pageName) {
-      this.loadPage(nextProps.pageName);
-    }
-  }
-
   async loadPage(path) {
-    const settings = this.props.appStore.settings;
+    const { settings } = appStore;
     await this.pageStore.loadPage(settings.user, settings.repository, path);
   }
 
   async onCreatePage(pageName) {
-    const { settings } = this.props.appStore;
+    const { settings } = appStore;
     const newPage = await this.pageStore.createPage(
       settings.user,
       settings.repository,
@@ -56,13 +42,13 @@ import PageToolbar from './page-toolbar.js';
     );
 
     await this.loadPage(newPage.path);
-    this.props.appStore.addPage(this.pageStore.page);
+    appStore.addPage(this.pageStore.page);
 
     this.pageStore.toggleEditMode();
   }
 
   async onSavePage(commitMessage) {
-    const { settings } = this.props.appStore;
+    const { settings } = appStore;
     await this.pageStore.savePage(
       settings.user,
       settings.repository,
@@ -79,9 +65,9 @@ import PageToolbar from './page-toolbar.js';
   }
 
   async onDeletePage() {
-    this.props.appStore.removePage(this.pageStore.page.path);
+    appStore.removePage(this.pageStore.page.path);
 
-    const { settings } = this.props.appStore;
+    const { settings } = appStore;
     await this.pageStore.deletePage(settings.user, settings.repository);
 
     await this.loadPage('index');
@@ -126,7 +112,7 @@ import PageToolbar from './page-toolbar.js';
   }
 
   renderToolbar() {
-    if (!this.props.appStore.isLoggedIn()) {
+    if (!appStore.isLoggedIn()) {
       return null;
     }
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import Router from 'next/router';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
-import { initAppStore } from './../stores/app.store.js';
+import appStore from './../stores/app.store.js';
 import ConnectStore from './../stores/connect.store.js';
 import PageLayout from './../components/page-layout.js';
+import navigator from './../services/navigator.service.js';
 
 const DELAY_TYPE_TIMEOUT = 1000;
 
@@ -20,14 +20,8 @@ const DELAY_TYPE_TIMEOUT = 1000;
     };
   }
 
-
+  connectStore = new ConnectStore();
   typeTimeout = null;
-
-  constructor(props) {
-    super(props);
-    this.appStore = initAppStore();
-    this.connectStore = new ConnectStore();
-  }
 
   componentDidMount() {
     this.connectStore.setUser(this.props.user);
@@ -56,13 +50,13 @@ const DELAY_TYPE_TIMEOUT = 1000;
   }
 
   connectTo(user, repository) {
-    this.appStore.changeSettings({ user, repository });
-    Router.push('/');
+    appStore.changeSettings({ user, repository });
+    navigator.goHome();
   }
 
   render() {
     return (
-      <PageLayout appStore={this.appStore} showSidebar={false}>
+      <PageLayout showSidebar={false}>
         <form className="Connect-form" autoComplete="off" noValidate>
           <TextField
             id="user"

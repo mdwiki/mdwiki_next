@@ -11,8 +11,6 @@ import { screensizes } from './../common/styles/screensizes.js';
 import Dialog from './dialog.js';
 import DialogStore from './../stores/dialog.store.js';
 
-const Aux = props => props.children;
-
 @observer export default class PageToolbarComponent extends React.Component {
   static propTypes = {
     pageStore: PropTypes.object.isRequired,
@@ -67,7 +65,7 @@ const Aux = props => props.children;
 
   renderToolbarButtons() {
     return (
-      <Aux>
+      <React.Fragment>
         {this.renderNewPageDialog()}
         {this.renderDeletePageDialog()}
 
@@ -98,7 +96,7 @@ const Aux = props => props.children;
             <DeleteIcon />
           </IconButton>
         </Tooltip>
-      </Aux>
+      </React.Fragment>
     );
   }
 

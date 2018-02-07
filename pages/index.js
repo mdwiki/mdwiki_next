@@ -1,35 +1,25 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import { initAppStore } from './../stores/app.store.js';
 import PageLayout from './../components/page-layout.js';
 import Page from './../components/page.js';
+import navigator from './../services/navigator.service.js';
 
 @observer export default class IndexPage extends React.Component {
   static async getInitialProps({ query }) {
     return {
-      pageName: query.name
+      pageName: query.page
     };
   }
 
-  constructor(props) {
-    super(props);
-    this.appStore = initAppStore();
-  }
-
   componentDidMount() {
-    this.appStore = initAppStore();
+    const pageName = this.props.pageName || 'index';
+    navigator.gotoPage(pageName);
   }
 
   render() {
-    if (!this.appStore) {
-      return null;
-    }
-
-    const pageName = this.props.pageName || 'index';
-
     return (
-      <PageLayout appStore={this.appStore}>
-        <Page appStore={this.appStore} pageName={pageName} />
+      <PageLayout>
+        <Page />
       </PageLayout>
     );
   }
