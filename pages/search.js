@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import SearchIcon from 'material-ui-icons/Search';
-import { initAppStore } from './../stores/app.store.js';
+import appStore from './../stores/app.store.js';
 import SearchStore from './../stores/search.store.js';
 import PageLayout from './../components/page-layout.js';
 import ProgressBar from './../components/progress-bar.js';
@@ -20,26 +20,20 @@ const DELAY_TYPE_TIMEOUT = 1000;
     };
   }
 
-  constructor(props) {
-    super(props);
-    this.appStore = initAppStore();
-    this.searchStore = new SearchStore();
-  }
+  searchStore = new SearchStore();
 
   async componentDidMount() {
-    this.appStore = initAppStore();
     if (this.props.searchTerm) {
-      this.appStore.searchTerm = this.props.searchTerm;
+      appStore.changeSearchTerm(this.props.searchTerm);
     }
 
-    this.searchStore = new SearchStore();
-    if (this.appStore.searchTerm) {
-      await this.startSearch(this.appStore.searchTerm);
+    if (appStore.searchTerm) {
+      await this.startSearch(appStore.searchTerm);
       this.forceUpdate(); // HACK - I don't know why this is necessary
     }
 
     this.unregisterReaction = reaction(
-      () => this.appStore.searchTerm,
+      () => appStore.searchTerm,
       searchTerm => this.startSearchDelayed(searchTerm)
     );
   }
@@ -61,14 +55,14 @@ const DELAY_TYPE_TIMEOUT = 1000;
   }
 
   onSearchTermChanged(searchTerm) {
-    this.appStore.searchTerm = searchTerm;
+    appStore.searchTerm = searchTerm;
   }
 
   async startSearch(searchTerm) {
     if (!searchTerm) {
       return;
     }
-    const settings = this.appStore.settings;
+    const settings = appStore.settings;
     await this.searchStore.startSearch(settings.user, settings.repository, searchTerm);
   }
 
@@ -85,17 +79,14 @@ const DELAY_TYPE_TIMEOUT = 1000;
   }
 
   render() {
-    if (!this.appStore || !this.searchStore) {
+    if (!this.searchStore) {
       return null;
     }
 
     const searchStore = this.searchStore;
 
     return (
-      <PageLayout
-        appStore={this.appStore}
-        showSidebar={false}
-      >
+      <PageLayout showSidebar={false}>
         {searchStore.isBusy && <ProgressBar />}
         <div className="markdown-body SearchPage-container">
           <h1>Search</h1>
@@ -106,13 +97,13 @@ const DELAY_TYPE_TIMEOUT = 1000;
           <div className="SearchPageInput-container">
             <TextField
               id="searchTerm"
-              value={this.appStore.searchTerm}
+              value={appStore.searchTerm}
               onChange={(e) => this.onSearchTermChanged(e.target.value)}
             />
             <IconButton
               className="Search-button"
               aria-label="Search"
-              onClick={() => this.startSearch(this.appStore.searchTerm)}
+              onClick={() => this.startSearch(appStore.searchTerm)}
             >
               <SearchIcon />
             </IconButton>

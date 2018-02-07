@@ -1,30 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
 import groupPages from './../common/helpers/page-grouper.js';
-import navigationService from './../services/navigator.service.js';
+import appStore from './../stores/app.store.js';
+import navigator from './../services/navigator.service.js';
 
 @observer export default class PageList extends React.Component {
-  static propTypes = {
-    appStore: PropTypes.object.isRequired
-  };
-
   componentDidMount() {
-    this.loadPages(this.props.appStore);
+    this.loadPages();
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.loadPages(nextProps.appStore);
-  }
-
-  loadPages(appStore) {
+  loadPages() {
     return appStore.loadPages();
   }
 
   onPageClicked(page) {
-    navigationService.gotoPage(page.name);
-    this.props.appStore.changeSelectedPage(page.name);
+    navigator.gotoPage(page.name);
   }
 
   renderPage(page) {
@@ -49,7 +40,6 @@ import navigationService from './../services/navigator.service.js';
   }
 
   render() {
-    const appStore = this.props.appStore;
     if (!appStore.pages) {
       return null;
     }

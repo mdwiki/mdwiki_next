@@ -1,4 +1,5 @@
 import Router from 'next/router';
+import appStore from './../stores/app.store.js';
 
 class NavigatorService {
   goHome() {
@@ -7,6 +8,7 @@ class NavigatorService {
 
   gotoPage(pageName) {
     Router.push({ pathname: '/', query: { page: pageName } });
+    appStore.changeSelectedPage(pageName);
   }
 
   gotoSearchPage(searchTerm) {
