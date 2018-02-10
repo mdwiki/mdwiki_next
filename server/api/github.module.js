@@ -30,7 +30,7 @@ async function handleApiRequest(ctx) {
     url += `?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`;
   }
 
-  if (request.body) {
+  if (request.method !== 'GET' && request.body) {
     options.body = JSON.stringify(request.body);
   }
 
