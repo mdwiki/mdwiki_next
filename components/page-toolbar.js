@@ -69,7 +69,7 @@ import DialogStore from './../stores/dialog.store.js';
         {this.renderNewPageDialog()}
         {this.renderDeletePageDialog()}
 
-        <Tooltip title="Add">
+        <Tooltip title="Add (Alt+N)">
           <IconButton
             className="Toolbar-button"
             aria-label="Add"
@@ -78,7 +78,7 @@ import DialogStore from './../stores/dialog.store.js';
             <AddIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Edit">
+        <Tooltip title="Edit (Shift+E)">
           <IconButton
             className="Toolbar-button"
             aria-label="Edit"
@@ -110,7 +110,7 @@ import DialogStore from './../stores/dialog.store.js';
         {!this.props.pageStore.isInEditMode && this.renderToolbarButtons()}
 
         <HotKey
-          keys={['shift', 'm']}
+          keys={['alt', 'n']}
           simultaneous
           onKeysCoincide={() => this.onNewPageButtonClicked()}
         />

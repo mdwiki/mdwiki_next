@@ -44,9 +44,9 @@ const Aux = props => props.children;
     super(props);
 
     const myButtons = [{
-      name: 'save', action: () => this.onSaveButtonClicked(), className: 'fa fa-floppy-o', title: 'Save'
+      name: 'save', action: () => this.onSaveButtonClicked(), className: 'fa fa-floppy-o', title: 'Save (Alt+S)'
     }, {
-      name: 'cancel', action: () => this.onCancelEditButtonClicked(), className: 'fa fa-times', title: 'Cancel'
+      name: 'cancel', action: () => this.onCancelEditButtonClicked(), className: 'fa fa-times', title: 'Cancel (ESC)'
     }];
     SimpleMDEOptions.toolbar = myButtons.concat(SimpleMDEOptions.toolbar);
 
@@ -115,7 +115,7 @@ const Aux = props => props.children;
         </SimpleMDE>
 
         <HotKey
-          keys={['shift', 's']}
+          keys={['alt', 's']}
           simultaneous
           onKeysCoincide={() => this.onSaveButtonClicked()}
         />
