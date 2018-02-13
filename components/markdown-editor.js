@@ -69,8 +69,7 @@ const Aux = props => props.children;
     }
 
     if (!defaultCommitMessage) {
-      let pageName = this.props.pageStore.page.name;
-      pageName = pageName.substr(0, pageName.length - 3);
+      const pageName = this.props.pageStore.page.name;
       defaultCommitMessage = `Some changes for ${pageName}`;
     }
 
