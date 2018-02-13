@@ -7,6 +7,7 @@ import PageStore from './../stores/page.store.js';
 import ProgressBar from './progress-bar.js';
 import PageToolbar from './page-toolbar.js';
 import appStore from './../stores/app.store.js';
+import navigator from './../services/navigator.service.js';
 
 @observer export default class Page extends React.Component {
   pageStore = new PageStore();
@@ -68,9 +69,10 @@ import appStore from './../stores/app.store.js';
     appStore.removePage(this.pageStore.page.path);
 
     const { settings } = appStore;
+
     await this.pageStore.deletePage(settings.user, settings.repository);
 
-    await this.loadPage('index');
+    navigator.goHome();
   }
 
   renderEditor() {
