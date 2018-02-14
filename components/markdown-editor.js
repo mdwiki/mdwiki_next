@@ -32,8 +32,6 @@ const SimpleMDEOptions = {
   ]
 };
 
-const Aux = props => props.children;
-
 @observer export default class MarkdownEditorComponent extends React.Component {
   static propTypes = {
     pageStore: PropTypes.object.isRequired,
@@ -43,14 +41,24 @@ const Aux = props => props.children;
   constructor(props) {
     super(props);
 
+    this._prependCustomButtonsToToolbar();
+
+    this.savePageDialogStore = new DialogStore(true);
+  }
+
+  _prependCustomButtonsToToolbar() {
+    const defaultToolbar = [...SimpleMDEOptions.toolbar];
+    if (defaultToolbar[0].name === 'save') { // We've to remove the buttons before we can add it again
+      defaultToolbar.splice(0, 2);
+    }
+
     const myButtons = [{
       name: 'save', action: () => this.onSaveButtonClicked(), className: 'fa fa-floppy-o', title: 'Save (Alt+S)'
     }, {
       name: 'cancel', action: () => this.onCancelEditButtonClicked(), className: 'fa fa-times', title: 'Cancel (ESC)'
     }];
-    SimpleMDEOptions.toolbar = myButtons.concat(SimpleMDEOptions.toolbar);
 
-    this.savePageDialogStore = new DialogStore(true);
+    SimpleMDEOptions.toolbar = [...myButtons, ...defaultToolbar];
   }
 
   onCancelEditButtonClicked() {
@@ -97,7 +105,7 @@ const Aux = props => props.children;
     const pageStore = this.props.pageStore;
 
     return (
-      <Aux>
+      <React.Fragment>
         { this.renderSavePageDialog() }
         <SimpleMDE
           ref={simpleMDE => this.simpleMDE = simpleMDE ? simpleMDE.simplemde : undefined} // eslint-disable-line
@@ -124,7 +132,7 @@ const Aux = props => props.children;
           simultaneous
           onKeysCoincide={() => this.onCancelEditButtonClicked()}
         />
-      </Aux>
+      </React.Fragment>
     );
   }
 }
