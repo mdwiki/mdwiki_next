@@ -30,6 +30,7 @@ const excludeRules = [
 const apiCacheRule = /^\/api\//;
 
 self.addEventListener('install', event => {
+  console.log('ServiceWorker installing...');
   const precachePromise = addToCache(EXTERNALS_CACHE_NAME, externalLibraries);
 
   event.waitUntil(precachePromise.then(() => notifyUpdate()));
