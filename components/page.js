@@ -1,6 +1,7 @@
 import React from 'react';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
+import Markdown from 'markdown-to-jsx';
 import HotKey from 'react-shortcut';
 import MarkdownEditor from './markdown-editor.js';
 import PageStore from './../stores/page.store.js';
@@ -8,6 +9,15 @@ import ProgressBar from './progress-bar.js';
 import PageToolbar from './page-toolbar.js';
 import appStore from './../stores/app.store.js';
 import navigator from './../services/navigator.service.js';
+import Link from './link.js';
+
+const markdownRenderOptions = {
+  overrides: {
+    a: {
+      component: Link
+    }
+  }
+};
 
 @observer export default class Page extends React.Component {
   pageStore = new PageStore();
@@ -95,7 +105,9 @@ import navigator from './../services/navigator.service.js';
 
     return (
       <div className="Markdown-container markdown-body">
-        { this.pageStore.markdownAsReact }
+        <Markdown options={markdownRenderOptions}>
+          { this.pageStore.markdown }
+        </Markdown>
         <style jsx> {`
           .Markdown-container {
             overflow-y: auto;
