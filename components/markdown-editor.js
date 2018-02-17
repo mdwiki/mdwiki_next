@@ -68,7 +68,6 @@ const SimpleMDEOptions = {
     this.props.pageStore.toggleEditMode();
   }
 
-
   onSaveButtonClicked() {
     let defaultCommitMessage;
 
@@ -109,8 +108,8 @@ const SimpleMDEOptions = {
         { this.renderSavePageDialog() }
         <SimpleMDE
           ref={simpleMDE => this.simpleMDE = simpleMDE ? simpleMDE.simplemde : undefined} // eslint-disable-line
-          onChange={markdownText => pageStore.updatePage(markdownText)}
-          value={pageStore.markdownText}
+          onChange={markdown => pageStore.updatePage(markdown)}
+          value={pageStore.markdown}
           options={SimpleMDEOptions}
         >
           <style jsx> {`
