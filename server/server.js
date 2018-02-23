@@ -76,6 +76,7 @@ app.prepare().then(() => {
   router.get('/service-worker.js', async ctx => {
     const data = await readFile(`${__dirname}/service-worker.js`, 'utf8');
     ctx.type = 'application/javascript; charset=UTF-8';
+    ctx.set('Cache-Control', 'max-age=0');
     ctx.body = data;
     ctx.status = 200;
   });
