@@ -8,7 +8,10 @@ export default class Link extends React.Component {
   };
 
   _isExternalLink(href) {
-    return href.startsWith('http');
+    if (href) {
+      return href.startsWith('http');
+    }
+    return true;
   }
 
   render() {
