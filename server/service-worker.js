@@ -30,28 +30,43 @@ const excludeRules = [
 const apiCacheRule = /^\/api\//;
 
 self.addEventListener('install', event => {
-  console.log('ServiceWorker installing...');
-  const precachePromise = addToCache(EXTERNALS_CACHE_NAME, externalLibraries);
-
-  event.waitUntil(precachePromise.then(() => notifyUpdate()));
+  self.skipWaiting();
+  // console.log(`ServiceWorker ${APP_VERSION} installing...`);
+  event.waitUntil(installServiceWorker());
 });
 
 self.addEventListener('activate', event => {
+  // console.log(`ServiceWorker ${APP_VERSION} activating...`);
   event.waitUntil(cleanOldCaches());
 });
 
 self.addEventListener('fetch', event => {
+  // console.log(`ServiceWorker ${APP_VERSION} fetching`);
   if (event.request.method !== 'GET') {
     return;
   }
   event.respondWith(handleFetch(event.request));
 });
 
+async function installServiceWorker() {
+  const isUpdate = await checkIfIsUpdate();
+  await addToCache(EXTERNALS_CACHE_NAME, externalLibraries);
+  if (isUpdate) {
+    await notifyUpdate();
+  }
+}
+
+async function checkIfIsUpdate() {
+  const existingCacheKeys = await caches.keys();
+  return existingCacheKeys.some(key => key === EXTERNALS_CACHE_NAME);
+}
+
 
 async function notifyUpdate() {
   const allClients = await clients.matchAll({ includeUncontrolled: true, type: 'window' });
+  // console.log(`Send update notification to ${allClients.length} clients...`);
   for (const client of allClients) {
-    client.postMessage({ type: 'update' });
+    client.postMessage({ type: 'update', version: APP_VERSION });
   }
 }
 
