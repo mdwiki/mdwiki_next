@@ -18,16 +18,11 @@ const cacheRules = [
   /^\/$/,
   /^\/connect$/,
   /^\/search$/,
-  /^\/_next\//,
+  /^\/_next\/(?!on-demand-entries-ping)/,
   /^\/static\//,
 ];
 
-const excludeRules = [
-  /\/service-worker.js$/,
-  /_next\/on-demand-entries-ping$/
-];
-
-const apiCacheRule = /^\/api\//;
+const apiCacheRule = /^\/api\/(?!search)/;
 
 self.addEventListener('install', event => {
   self.skipWaiting();
@@ -97,12 +92,7 @@ function isApiRequest(requestUrl) {
 }
 
 function shouldRequestBeCached(requestUrl) {
-  let shouldBeCached = isAnyRuleMatching(cacheRules, requestUrl.pathname);
-  if (shouldBeCached && isAnyRuleMatching(excludeRules, requestUrl.pathname)) {
-    shouldBeCached = false;
-  }
-
-  return shouldBeCached;
+  return isAnyRuleMatching(cacheRules, requestUrl.pathname);
 }
 
 function isAnyRuleMatching(rules, value) {
