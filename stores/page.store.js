@@ -20,6 +20,10 @@ export default class PageStore {
     }
   }
 
+  @action updatePage(markdown) {
+    this.markdown = markdown;
+  }
+
   @action async savePage(user, repository, commitMessage) {
     this.isBusy = true;
 
