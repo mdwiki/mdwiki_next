@@ -129,6 +129,9 @@ async function cacheFirst(cacheName, request, cacheKey = request) {
 
   return fetch(request)
     .then(response => {
+      if (response.status === 200) {
+        cache.put(cacheKey, response.clone());
+      }
       cache.put(cacheKey, response.clone());
       return response;
     });
@@ -139,7 +142,9 @@ async function networkFirst(cacheName, request, cacheKey) {
 
   return fetch(request)
     .then(response => {
-      cache.put(cacheKey, response.clone());
+      if (response.status === 200) {
+        cache.put(cacheKey, response.clone());
+      }
       return response;
     })
     .catch(error => cache.match(cacheKey));
