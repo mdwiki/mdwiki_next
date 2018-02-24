@@ -30,12 +30,17 @@ export default class PageLayout extends React.Component {
 
 
   state = {
-    showLeftSidebar: false
+    showLeftSidebar: false,
+    isLoaded: false
   };
 
   toggleLeftSidebar() {
     const showLeftSidebar = this.state.showLeftSidebar;
     this.setState({ showLeftSidebar: !showLeftSidebar });
+  }
+
+  componentDidMount() {
+    this.setState({ isLoaded: true }); // eslint-disable-line
   }
 
   connect() {
@@ -109,8 +114,14 @@ export default class PageLayout extends React.Component {
   }
 
   render() {
+    const mainContainerClassName = classNames(
+      'Main-container',
+      { 'show-sidebar': this.props.showSidebar },
+      { 'is-loaded': this.state.isLoaded }
+    );
+
     return (
-      <div className={classNames('Main-container', { 'show-sidebar': this.props.showSidebar })}>
+      <div className={mainContainerClassName}>
         <ErrorBoundary>
           <AppBar className="AppBar">
             <Toolbar className="Toolbar">
