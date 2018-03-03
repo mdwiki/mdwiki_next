@@ -41,6 +41,7 @@ function Transition(props) {
       <TextField
         id="dialogValueInput"
         className="DialogValue-input"
+        autoFocus
         value={store.value}
         error={!store.hasValue}
         onFocus={(e) => e.target.select()}
