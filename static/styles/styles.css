@@ -65,7 +65,7 @@ html, body {
   .Sidebar {
     display: flex;
     grid-area: sidebar;
-    overflow-y: auto;
+    height: calc(100vh - 64px);
   }
 
   .ToggleSidebar-button {
