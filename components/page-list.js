@@ -33,7 +33,7 @@ import { screensizes } from './../common/styles/screensizes.js';
 
   renderGroupLink(group) {
     return (
-      <a className="Group-link" key={`Link-${group.letter}`} href={`#${group.letter}`}>
+      <a className="Group-link" key={`Link-${group.letter}`} href={`#${group.letter}`} target="_self">
         {group.letter}
         <style jsx> {`
           a {
@@ -75,9 +75,10 @@ import { screensizes } from './../common/styles/screensizes.js';
     }
 
     const groups = groupPages(appStore.pages);
+    const groupsPerRow = groups.length > 10 ? Math.ceil(groups.length / 2) : groups.length;
 
     return (
-      <div>
+      <div className="Sidebar-container">
         <div className="GroupLinks-container">
           {groups.map(group => this.renderGroupLink(group))}
         </div>
@@ -100,6 +101,10 @@ import { screensizes } from './../common/styles/screensizes.js';
             padding-top: 0px;
           }
 
+          .Sidebar-container {
+            width: 100%;
+          }
+
           .PageList-container {
             overflow-y: auto;
             overflow-x: hidden;
@@ -112,12 +117,12 @@ import { screensizes } from './../common/styles/screensizes.js';
 
           @media (min-width: ${ screensizes.iPadLandscape }) {
             .GroupLinks-container {
-              display: flex;
+              display: grid;
+              grid-template-columns: repeat(${groupsPerRow}, 20px);
+              justify-content: center;
               margin: 5px 5px 0px 5px;
-              width: 88%;
-              justify-content: space-evenly;
-              flex-wrap: wrap;
             }
+
             .PageList-container {
               height: calc(100vh - 64px - 48px);
             }
