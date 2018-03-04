@@ -2,8 +2,13 @@
   "name": "MDWiki",
   "short_name": "MDWiki",
   "display": "standalone",
-  "start_url": "https://www.mdwiki.net",
-  "theme_color": "#9c27b0",
-  "background_color": "#fafafa",
-  "lang": "en-US"
+  "start_url": "/",
+  "theme_color": "#3f51b5",
+  "background_color": "#3f51b5",
+  "lang": "en-US",
+  "Icons": [{
+    "src": "static/images/wiki.png"
+    "type": "image/png"
+    "sizes": "48x48"
+  }]
 }
