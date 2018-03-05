@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import List, { ListItem, ListItemText, ListSubheader } from 'material-ui/List';
+import Scrollchor from 'react-scrollchor';
 import groupPages from './../common/helpers/page-grouper.js';
 import appStore from './../stores/app.store.js';
 import navigator from './../services/navigator.service.js';
@@ -33,21 +34,21 @@ import { screensizes } from './../common/styles/screensizes.js';
 
   renderGroupLink(group) {
     return (
-      <a className="Group-link" key={`Link-${group.letter}`} href={`#${group.letter}`} target="_self">
+      <Scrollchor className="Group-link" to={`#${group.letter}`}>
         {group.letter}
         <style jsx> {`
-          a {
+          :global(.Group-link) {
             font-size: 1.5rem;
             color: rgba(0, 0, 0, 0.54);
             text-decoration: none
           }
 
-          a:hover {
+          :global(.Group-link:hover) {
             color: black;
           }
         `}
         </style>
-      </a>
+      </Scrollchor>
     );
   }
 
@@ -55,11 +56,11 @@ import { screensizes } from './../common/styles/screensizes.js';
     return (
       <div key={group.letter}>
         <ListSubheader className="PageSubHeader">
-          <h3 id={group.letter} href="#">{group.letter}</h3>
+          <section id={group.letter} href="#">{group.letter}</section>
         </ListSubheader>
         { group.pages.map(page => this.renderPage(page))}
         <style jsx> {`
-          h3 {
+          section {
             margin: 0;
             font-size: 1em;;
           }

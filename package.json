@@ -46,6 +46,7 @@
     "prop-types": "15.6.0",
     "react": "16.2.0",
     "react-dom": "16.2.0",
+    "react-scrollchor": "4.2.1",
     "react-shortcut": "1.0.6",
     "react-simplemde-editor": "3.6.11",
     "react-tap-event-plugin": "3.0.2"
