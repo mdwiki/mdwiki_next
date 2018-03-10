@@ -125,7 +125,7 @@ import { screensizes } from './../common/styles/screensizes.js';
             }
 
             .PageList-container {
-              height: calc(100vh - 64px - 48px);
+              height: calc(100vh - 120px);
             }
           }
         `}
