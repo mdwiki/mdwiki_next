@@ -35,19 +35,19 @@
     "koa-passport": "4.0.1",
     "koa-router": "7.4.0",
     "koa-session": "5.8.1",
-    "markdown-to-jsx": "6.6.0",
+    "markdown-to-jsx": "6.6.1",
     "material-ui": "1.0.0-beta.12",
     "material-ui-icons": "1.0.0-beta.36",
     "mobx": "4.1.1",
     "mobx-react": "5.0.0",
-    "next": "4.2.3",
+    "next": "5.1.0",
     "node-fetch": "2.1.2",
     "passport-github": "1.1.0",
     "prop-types": "15.6.1",
-    "react": "16.3.0",
-    "react-dom": "16.3.0",
-    "react-scrollchor": "5.0.0",
-    "react-shortcut": "1.0.6",
+    "react": "16.3.1",
+    "react-dom": "16.3.1",
+    "react-scrollchor": "5.0.1",
+    "react-shortcut": "github:janbaer/react-hotkeys",
     "react-simplemde-editor": "3.6.14",
     "react-tap-event-plugin": "3.0.2"
   },
@@ -63,8 +63,8 @@
     "github-markdown-css": "2.10.0",
     "husky": "0.14.3",
     "jest": "22.4.3",
-    "lint-staged": "7.0.2",
+    "lint-staged": "7.0.4",
     "react-addons-test-utils": "15.6.2",
-    "react-test-renderer": "16.3.0"
+    "react-test-renderer": "16.3.1"
   }
 }
