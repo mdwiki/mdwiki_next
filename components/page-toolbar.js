@@ -6,7 +6,7 @@ import Tooltip from 'material-ui/Tooltip';
 import AddIcon from 'material-ui-icons/Add';
 import EditIcon from 'material-ui-icons/Edit';
 import DeleteIcon from 'material-ui-icons/Delete';
-import HotKey from 'react-shortcut';
+import HotKey from './hotkey.js';
 import { screensizes } from './../common/styles/screensizes.js';
 import Dialog from './dialog.js';
 import DialogStore from './../stores/dialog.store.js';

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import SimpleMDE from 'react-simplemde-editor';
-import HotKey from 'react-shortcut';
+import HotKey from './hotkey.js';
 import Dialog from './dialog.js';
 import DialogStore from './../stores/dialog.store.js';
 

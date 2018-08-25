@@ -2,7 +2,7 @@ import React from 'react';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import Markdown from 'markdown-to-jsx';
-import HotKey from 'react-shortcut';
+import HotKey from './hotkey.js';
 import MarkdownEditor from './markdown-editor.js';
 import PageStore from './../stores/page.store.js';
 import ProgressBar from './progress-bar.js';
