@@ -36,17 +36,18 @@ import { screensizes } from './../common/styles/screensizes.js';
     return (
       <Scrollchor className="Group-link" to={`#${group.letter}`}>
         {group.letter}
-        <style jsx> {`
-          :global(.Group-link) {
-            font-size: 1.5rem;
-            color: rgba(0, 0, 0, 0.54);
-            text-decoration: none
-          }
+        <style jsx>
+          {`
+            :global(.Group-link) {
+              font-size: 1.5rem;
+              color: rgba(0, 0, 0, 0.54);
+              text-decoration: none
+            }
 
-          :global(.Group-link:hover) {
-            color: black;
-          }
-        `}
+            :global(.Group-link:hover) {
+              color: black;
+            }
+          `}
         </style>
       </Scrollchor>
     );
@@ -59,12 +60,13 @@ import { screensizes } from './../common/styles/screensizes.js';
           <section id={group.letter} href="#">{group.letter}</section>
         </ListSubheader>
         { group.pages.map(page => this.renderPage(page))}
-        <style jsx> {`
-          section {
-            margin: 0;
-            font-size: 1em;;
-          }
-        `}
+        <style jsx>
+          {`
+            section {
+              margin: 0;
+              font-size: 1em;;
+            }
+          `}
         </style>
       </div>
     );
@@ -88,47 +90,48 @@ import { screensizes } from './../common/styles/screensizes.js';
             {groups.map(group => this.renderGroup(group))}
           </List>
         </div>
-        <style jsx> {`
-          :global(.PageNameText) {
-            margin-left: 10px;
-          }
+        <style jsx>
+          {`
+            :global(.PageNameText) {
+              margin-left: 10px;
+            }
 
-          :global(.PageSubHeader) {
-            font-weight: bold;
-            font-size: 18px;
-          }
+            :global(.PageSubHeader) {
+              font-weight: bold;
+              font-size: 18px;
+            }
 
-          :global(.Page-list) {
-            padding-top: 0px;
-          }
+            :global(.Page-list) {
+              padding-top: 0px;
+            }
 
-          .Sidebar-container {
-            width: 100%;
-          }
-
-          .PageList-container {
-            overflow-y: auto;
-            overflow-x: hidden;
-            height: 100vh;
-          }
-
-          .GroupLinks-container {
-            display: none;
-          }
-
-          @media (min-width: ${ screensizes.iPadLandscape }) {
-            .GroupLinks-container {
-              display: grid;
-              grid-template-columns: repeat(${groupsPerRow}, 20px);
-              justify-content: center;
-              margin: 5px 5px 0px 5px;
+            .Sidebar-container {
+              width: 100%;
             }
 
             .PageList-container {
-              height: calc(100vh - 120px);
+              overflow-y: auto;
+              overflow-x: hidden;
+              height: 100vh;
             }
-          }
-        `}
+
+            .GroupLinks-container {
+              display: none;
+            }
+
+            @media (min-width: ${ screensizes.iPadLandscape }) {
+              .GroupLinks-container {
+                display: grid;
+                grid-template-columns: repeat(${groupsPerRow}, 20px);
+                justify-content: center;
+                margin: 5px 5px 0px 5px;
+              }
+
+              .PageList-container {
+                height: calc(100vh - 120px);
+              }
+            }
+          `}
         </style>
       </div>
     );

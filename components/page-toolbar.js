@@ -34,7 +34,8 @@ import DialogStore from './../stores/dialog.store.js';
 
   onCreateNewPageDialogClosed() {
     if (this.newPageDialogStore.isConfirmed) {
-      this.props.onCreatePage(this.newPageDialogStore.value);
+      const { onCreatePage } = this.props;
+      onCreatePage(this.newPageDialogStore.value);
     }
   }
 
@@ -51,12 +52,14 @@ import DialogStore from './../stores/dialog.store.js';
 
   onDeletePageDialogClosed() {
     if (this.deletePageDialogStore.isConfirmed) {
-      this.props.onDeletePage();
+      const { onDeletePage } = this.props;
+      onDeletePage();
     }
   }
 
   onEditButtonClicked() {
-    this.props.pageStore.toggleEditMode();
+    const { pageStore } = this.props;
+    pageStore.toggleEditMode();
   }
 
   onNewPageButtonClicked() {
@@ -101,13 +104,14 @@ import DialogStore from './../stores/dialog.store.js';
   }
 
   render() {
-    if (!this.props.pageStore) {
+    const { pageStore } = this.props;
+    if (!pageStore) {
       return null;
     }
 
     return (
       <div className="Page-toolbar">
-        {!this.props.pageStore.isInEditMode && this.renderToolbarButtons()}
+        {!pageStore.isInEditMode && this.renderToolbarButtons()}
 
         <HotKey
           keys={['alt', 'n']}
@@ -115,36 +119,37 @@ import DialogStore from './../stores/dialog.store.js';
           onKeysCoincide={() => this.onNewPageButtonClicked()}
         />
 
-        <style jsx> {`
-          .Page-toolbar {
-            display: none;
-            position: fixed;
-            top: 110px;
-            right: 20px;
-            z-index: 99;
-          }
-
-          :global(.Toolbar-button) {
-            width: 32px;
-            height: 32px;
-            color: #005cc5;
-          }
-
-          @media (min-width: ${ screensizes.smallTablet }) {
+        <style jsx>
+          {`
+            .Page-toolbar {
+              display: none;
+              position: fixed;
+              top: 110px;
+              right: 20px;
+              z-index: 99;
+            }
 
             :global(.Toolbar-button) {
-              width: 48px;
-              height: 48px;
+              width: 32px;
+              height: 32px;
+              color: #005cc5;
             }
 
-            @media (min-width: ${ screensizes.iPadPortrait }) {
-              .Page-toolbar {
-                display: block;
-                top: 80px;
+            @media (min-width: ${ screensizes.smallTablet }) {
+
+              :global(.Toolbar-button) {
+                width: 48px;
+                height: 48px;
+              }
+
+              @media (min-width: ${ screensizes.iPadPortrait }) {
+                .Page-toolbar {
+                  display: block;
+                  top: 80px;
+                }
               }
             }
-          }
-        `}
+          `}
         </style>
       </div>
     );

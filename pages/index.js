@@ -13,8 +13,8 @@ import appStore from './../stores/app.store.js';
   }
 
   componentDidMount() {
-    const pageName = this.props.pageName || 'index';
-    navigator.gotoPage(pageName);
+    const { pageName } = this.props;
+    navigator.gotoPage(pageName || 'index');
   }
 
   componentWillReceiveProps(nextProps) {

@@ -108,12 +108,13 @@ const markdownRenderOptions = {
         <Markdown options={markdownRenderOptions}>
           { this.pageStore.markdown }
         </Markdown>
-        <style jsx> {`
-          .Markdown-container {
-            overflow-y: auto;
-            height: calc(100vh - 90px);
-          }
-        `}
+        <style jsx>
+          {`
+            .Markdown-container {
+              overflow-y: auto;
+              height: calc(100vh - 90px);
+            }
+          `}
         </style>
       </div>
     );
@@ -157,11 +158,12 @@ const markdownRenderOptions = {
           onKeysCoincide={() => this.onEditHotKeyPressed()}
         />
 
-        <style jsx> {`
-          .Page-container {
-            height: calc(100vh - 84px);
-            overflow-y: hidden;
-          }
+        <style jsx>
+          {`
+            .Page-container {
+              height: calc(100vh - 84px);
+              overflow-y: hidden;
+            }
         `}
         </style>
       </div>

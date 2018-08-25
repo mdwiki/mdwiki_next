@@ -19,7 +19,7 @@ export default class Link extends React.Component {
 
     if (this._isExternalLink(href)) {
       return (
-        <a href={href} target="_blank" >{children}</a>
+        <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
       );
     }
 
@@ -27,6 +27,7 @@ export default class Link extends React.Component {
 
     return (
       <button
+        type="button"
         className="Link-button"
         onClick={() => navigator.gotoPage(pageName)}
       >

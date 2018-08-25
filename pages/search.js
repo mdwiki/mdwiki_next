@@ -23,8 +23,9 @@ const DELAY_TYPE_TIMEOUT = 1000;
   searchStore = new SearchStore();
 
   async componentDidMount() {
-    if (this.props.searchTerm) {
-      appStore.changeSearchTerm(this.props.searchTerm);
+    const { searchTerm } = this.props;
+    if (searchTerm) {
+      appStore.changeSearchTerm(searchTerm);
     }
 
     if (appStore.searchTerm) {
@@ -34,7 +35,7 @@ const DELAY_TYPE_TIMEOUT = 1000;
 
     this.unregisterReaction = reaction(
       () => appStore.searchTerm,
-      searchTerm => this.startSearchDelayed(searchTerm)
+      newSearchTerm => this.startSearchDelayed(newSearchTerm)
     );
   }
 
@@ -73,7 +74,7 @@ const DELAY_TYPE_TIMEOUT = 1000;
   renderSearchResult(page) {
     return (
       <li key={page.name}>
-        <button className="Link-button" onClick={() => this.navigateTo(page.name)}>{page.name}</button>
+        <button type="button" className="Link-button" onClick={() => this.navigateTo(page.name)}>{page.name}</button>
       </li>
     );
   }
@@ -118,7 +119,8 @@ const DELAY_TYPE_TIMEOUT = 1000;
           </div>
         </div>
 
-        <style jsx> {`
+        <style jsx>
+          {`
           h1 {
             display: none;
           }

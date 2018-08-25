@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import Button from 'material-ui/Button';
-import Dialog, { DialogTitle, DialogContent, DialogActions, DialogContentText } from 'material-ui/Dialog';
+import Dialog, {
+  DialogTitle, DialogContent, DialogActions, DialogContentText
+} from 'material-ui/Dialog';
 import Slide from 'material-ui/transitions/Slide';
 import TextField from 'material-ui/TextField';
 
@@ -19,9 +21,10 @@ function Transition(props) {
   };
 
   onRequestClose(isConfirmed = false) {
-    this.props.store.closeDialog(isConfirmed);
-    if (!this.props.store.isOpened) {
-      this.props.onDialogClosed();
+    const { store, onDialogClosed } = this.props;
+    store.closeDialog(isConfirmed);
+    if (!store.isOpened) {
+      onDialogClosed();
     }
   }
 
@@ -52,16 +55,17 @@ function Transition(props) {
   }
 
   render() {
+    const { store, title, text } = this.props;
     return (
       <Dialog
-        open={this.props.store.isOpened}
+        open={store.isOpened}
         transition={Transition}
         onRequestClose={() => this.onRequestClose()}
       >
-        <DialogTitle>{this.props.title}</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{this.props.text}</DialogContentText>
-          { this.renderInputFieldIfValueIsRequired(this.props.store) }
+          <DialogContentText>{text}</DialogContentText>
+          { this.renderInputFieldIfValueIsRequired(store) }
         </DialogContent>
         <DialogActions>
           <Button
@@ -72,23 +76,24 @@ function Transition(props) {
           </Button>
           <Button
             className="Dialog-button" raised color="primary"
-            disabled={this.props.store.isValueRequired && !this.props.store.hasValue}
+            disabled={store.isValueRequired && !store.hasValue}
             onClick={() => this.onRequestClose(true)}
           >
             Ok
           </Button>
         </DialogActions>
-        <style jsx> {`
-          :global(.Dialog-button) {
-            width: 150px;
-            margin-bottom: 10px;
-          }
+        <style jsx>
+          {`
+            :global(.Dialog-button) {
+              width: 150px;
+              margin-bottom: 10px;
+            }
 
-          :global(.DialogValue-input) {
-            margin-top: 20px;
-            width: 320px;
-          }
-        `}
+            :global(.DialogValue-input) {
+              margin-top: 20px;
+              width: 320px;
+            }
+          `}
         </style>
       </Dialog>
     );

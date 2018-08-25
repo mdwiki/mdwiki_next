@@ -123,9 +123,11 @@ app.prepare().then(() => {
 function getPageName(pathname) {
   if (pathname === '/') {
     return 'index';
-  } else if (pathname.startsWith('/static')) {
+  }
+  if (pathname.startsWith('/static')) {
     return 'static';
-  } else if (pathname.startsWith('/_next')) {
+  }
+  if (pathname.startsWith('/_next')) {
     return '_next';
   }
   return pathname.substr(1);

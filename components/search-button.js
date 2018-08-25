@@ -42,54 +42,55 @@ import appStore from './../stores/app.store.js';
           onKeyDown={e => this.onInputKeydown(e)}
         />
 
-        <style jsx> {`
-          input {
-            display: none;
-          }
-
-          @media (min-width: ${ screensizes.smallTablet}) {
-            .Search-wrapper {
-              border-radius: 2px;
-              background-color: rgba(255,255,255,.15);
-              margin: 0 15px;
-              padding: 10px;
-              display: flex;
-              justify-content: space-between;
-              flex: 1;
-            }
-
-            .Search-wrapper:hover {
-              background-color: rgba(255,255,255,.25);
-              outline: 1px solid transparent;
-            }
-
-            :global(button.Search-button) {
-              height: 24px !important;
-            }
-
+        <style jsx>
+          {`
             input {
-              font: inherit;
-              padding: 5px;
-              border: 0;
-              display: block;
-              verticalAlign: middle;
-              whiteSpace: normal;
-              background: none;
-              margin: 0; // Reset for Safari
-              color: inherit;
-              flex: 1
+              display: none;
             }
 
-            input:focus {
-              outline: 0;
+            @media (min-width: ${ screensizes.smallTablet}) {
+              .Search-wrapper {
+                border-radius: 2px;
+                background-color: rgba(255,255,255,.15);
+                margin: 0 15px;
+                padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                flex: 1;
+              }
+
+              .Search-wrapper:hover {
+                background-color: rgba(255,255,255,.25);
+                outline: 1px solid transparent;
+              }
+
+              :global(button.Search-button) {
+                height: 24px !important;
+              }
+
+              input {
+                font: inherit;
+                padding: 5px;
+                border: 0;
+                display: block;
+                verticalAlign: middle;
+                whiteSpace: normal;
+                background: none;
+                margin: 0; // Reset for Safari
+                color: inherit;
+                flex: 1
+              }
+
+              input:focus {
+                outline: 0;
+              }
+
+              input::placeholder {
+                color: white;
+              }
             }
 
-            input::placeholder {
-              color: white;
-            }
-          }
-
-        `}
+          `}
         </style>
       </div>
 

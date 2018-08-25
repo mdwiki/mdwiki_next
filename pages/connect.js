@@ -24,8 +24,9 @@ const DELAY_TYPE_TIMEOUT = 1000;
   typeTimeout = null;
 
   componentDidMount() {
-    this.connectStore.setUser(this.props.user);
-    this.connectStore.setRepository(this.props.repository);
+    const { user, repository } = this.props;
+    this.connectStore.setUser(user);
+    this.connectStore.setRepository(repository);
     this.connectStore.validate();
   }
 
@@ -83,18 +84,19 @@ const DELAY_TYPE_TIMEOUT = 1000;
             </Button>
           </div>
         </form>
-        <style jsx> {`
-          .Connect-form {
-            display: flex;
-            flex-direction: column;
-            width: 300px;
-            padding: 10px;
-          }
+        <style jsx>
+          {`
+            .Connect-form {
+              display: flex;
+              flex-direction: column;
+              width: 300px;
+              padding: 10px;
+            }
 
-          .Connect-form > :global(div) {
-            margin-top: 15px;
-          }
-        `}
+            .Connect-form > :global(div) {
+              margin-top: 15px;
+            }
+          `}
         </style>
       </PageLayout>
     );

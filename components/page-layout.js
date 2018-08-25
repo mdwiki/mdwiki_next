@@ -35,7 +35,7 @@ export default class PageLayout extends React.Component {
   };
 
   toggleLeftSidebar() {
-    const showLeftSidebar = this.state.showLeftSidebar;
+    const { showLeftSidebar } = this.state;
     this.setState({ showLeftSidebar: !showLeftSidebar });
   }
 
@@ -69,12 +69,13 @@ export default class PageLayout extends React.Component {
   }
 
   renderMobileSidebar() {
+    const { showLeftSidebar } = this.state;
     return (
       <Drawer
         className="LeftSidebar"
         type="temporary"
         anchor="left"
-        open={this.state.showLeftSidebar}
+        open={showLeftSidebar}
         onRequestClose={() => this.toggleLeftSidebar()}
         onClick={() => this.toggleLeftSidebar()}
       >
@@ -114,10 +115,13 @@ export default class PageLayout extends React.Component {
   }
 
   render() {
+    const { showSidebar, children } = this.props;
+    const { isLoaded } = this.state;
+
     const mainContainerClassName = classNames(
       'Main-container',
-      { 'show-sidebar': this.props.showSidebar },
-      { 'is-loaded': this.state.isLoaded }
+      { 'show-sidebar': showSidebar },
+      { 'is-loaded': isLoaded }
     );
 
     return (
@@ -134,7 +138,7 @@ export default class PageLayout extends React.Component {
                 <MenuIcon />
               </IconButton>
               <div className="AppTitle">
-                <button className="Logo-button" onClick={() => this.goHome()}>
+                <button type="button" className="Logo-button" onClick={() => this.goHome()}>
                   <img className="Logo-image" src="static/images/wiki.png" alt="MDWiki" />
                 </button>
               </div>
@@ -152,55 +156,56 @@ export default class PageLayout extends React.Component {
             </Toolbar>
           </AppBar>
 
-          { this.props.showSidebar && this.renderMobileSidebar(this.props.appStore) }
-          { this.props.showSidebar && this.renderStaticSidebar(this.props.appStore) }
+          { showSidebar && this.renderMobileSidebar(appStore) }
+          { showSidebar && this.renderStaticSidebar(appStore) }
 
           <div className="AppContent-container">
-            { this.props.children }
+            { children }
           </div>
         </ErrorBoundary>
 
-        <style jsx> {`
-          :global(.AppTitle) {
-            flex: 1;
-          }
-
-          :global(.AppTitle > a){
-            text-decoration: none;
-            color: inherit;
-          }
-
-          :global(.Toolbar) {
-            padding-left: 0px !important;
-          }
-
-          .Logo-image {
-            height: 48px;
-            width: 48px;
-            cursor: pointer;
-          }
-
-          .Logo-button {
-            background: none;
-            border: none;
-          }
-
-          .Logo-button:focus {
-            outline: none;
-          }
-
-          @media (min-width: ${ screensizes.smallTablet }) {
+        <style jsx>
+          {`
             :global(.AppTitle) {
-              flex: 0;
+              flex: 1;
             }
-          }
 
-          @media (min-width: ${ screensizes.iPadLandscape }) {
-            :global(.Toolbar) {
-              padding-left: 16px !important;
+            :global(.AppTitle > a){
+              text-decoration: none;
+              color: inherit;
             }
-          }
-        `}
+
+            :global(.Toolbar) {
+              padding-left: 0px !important;
+            }
+
+            .Logo-image {
+              height: 48px;
+              width: 48px;
+              cursor: pointer;
+            }
+
+            .Logo-button {
+              background: none;
+              border: none;
+            }
+
+            .Logo-button:focus {
+              outline: none;
+            }
+
+            @media (min-width: ${ screensizes.smallTablet }) {
+              :global(.AppTitle) {
+                flex: 0;
+              }
+            }
+
+            @media (min-width: ${ screensizes.iPadLandscape }) {
+              :global(.Toolbar) {
+                padding-left: 16px !important;
+              }
+            }
+          `}
         </style>
       </div>
     );

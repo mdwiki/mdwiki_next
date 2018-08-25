@@ -65,10 +65,12 @@ const SimpleMDEOptions = {
     if (this.savePageDialogStore.isOpened) {
       return;
     }
-    this.props.pageStore.toggleEditMode();
+    const { pageStore } = this.props;
+    pageStore.toggleEditMode();
   }
 
   onSaveButtonClicked() {
+    const { pageStore } = this.props;
     let defaultCommitMessage;
 
     if (this.simpleMDE) {
@@ -76,7 +78,7 @@ const SimpleMDEOptions = {
     }
 
     if (!defaultCommitMessage) {
-      const pageName = this.props.pageStore.page.name;
+      const pageName = pageStore.page.name;
       defaultCommitMessage = `Some changes for ${pageName}`;
     }
 
@@ -84,8 +86,9 @@ const SimpleMDEOptions = {
   }
 
   onSavePageDialogClosed() {
+    const { onSavePage } = this.props;
     if (this.savePageDialogStore.isConfirmed) {
-      this.props.onSavePage(this.savePageDialogStore.value);
+      onSavePage(this.savePageDialogStore.value);
     }
   }
 
@@ -101,7 +104,7 @@ const SimpleMDEOptions = {
   }
 
   render() {
-    const pageStore = this.props.pageStore;
+    const { pageStore } = this.props;
 
     return (
       <React.Fragment>
@@ -112,11 +115,12 @@ const SimpleMDEOptions = {
           value={pageStore.markdown}
           options={SimpleMDEOptions}
         >
-          <style jsx> {`
-            :global(.CodeMirror-scroll) {
-              height: calc(100vh - 160px);
-            }
-          `}
+          <style jsx>
+            {`
+              :global(.CodeMirror-scroll) {
+                height: calc(100vh - 160px);
+              }
+            `}
           </style>
         </SimpleMDE>
 

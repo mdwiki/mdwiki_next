@@ -5,10 +5,10 @@ import navigator from './../services/navigator.service.js';
 
 export default class LoginPage extends React.Component {
   static async getInitialProps({ query }) {
-    const user = query.user;
+    const userName = query.user;
     const accessToken = query.accessToken;
 
-    return { user, accessToken };
+    return { userName, accessToken };
   }
 
   async readUserAvatarUrl(userName, accessToken) {
@@ -17,10 +17,11 @@ export default class LoginPage extends React.Component {
   }
 
   async componentDidMount() {
+    const { userName, accessToken } = this.props;
     const user = {
-      isLoggedIn: this.props.user !== undefined,
-      name: this.props.user,
-      accessToken: this.props.accessToken
+      isLoggedIn: userName !== undefined,
+      name: userName,
+      accessToken
     };
 
     if (user.isLoggedIn) {

@@ -45,16 +45,19 @@ export default class ErrorBoundary extends React.Component {
   }
 
   renderSnackBar(message) {
+    const { hasError } = this.state;
     return (
-      <Snackbar open={this.state.hasError} message={message} transition={Fade} SnackbarContentProps={{ 'aria-describedby': 'message-id' }} />
+      <Snackbar open={hasError} message={message} transition={Fade} SnackbarContentProps={{ 'aria-describedby': 'message-id' }} />
     );
   }
 
   render() {
+    const { hasError } = this.state;
+    const { children } = this.props;
     return (
       <React.Fragment>
-        { this.state.hasError && this.renderSnackBar('Unfortunately the last operation has failed, please try it again some later!') }
-        { this.props.children }
+        { hasError && this.renderSnackBar('Unfortunately the last operation has failed, please try it again some later!') }
+        { children }
       </React.Fragment>
     );
   }
