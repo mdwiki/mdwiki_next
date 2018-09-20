@@ -3,23 +3,22 @@
     "development": {
       "presets": [ "next/babel" ],
       "plugins": [
-        "transform-decorators-legacy",
+        ["@babel/plugin-proposal-decorators", { "legacy": true }],
         "transform-class-properties"
       ]
     },
     "production": {
       "presets": [ "next/babel" ],
       "plugins": [
-        "transform-decorators-legacy",
+        ["@babel/plugin-proposal-decorators", { "legacy": true }],
         "transform-class-properties"
       ]
     },
     "test": {
-      "presets": [ "env" ],
+      "presets": [[ "next/babel", { "preset:env": { "modules": "commonjs" }} ]],
       "plugins": [
-        "transform-decorators-legacy",
-        "transform-class-properties",
-        "babel-plugin-transform-es2015-modules-commonjs"
+        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+        "transform-class-properties"
       ]
     }
   }
