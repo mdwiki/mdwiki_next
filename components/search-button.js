@@ -6,7 +6,7 @@ import SearchIcon from 'material-ui-icons/Search';
 import { screensizes } from './../common/styles/screensizes.js';
 import appStore from './../stores/app.store.js';
 
-@observer export default class SearchButton extends React.Component {
+export default @observer class SearchButton extends React.Component {
   onSearchClicked() {
     Router.push({
       pathname: '/search',

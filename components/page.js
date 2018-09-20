@@ -19,7 +19,7 @@ const markdownRenderOptions = {
   }
 };
 
-@observer export default class Page extends React.Component {
+export default @observer class Page extends React.Component {
   pageStore = new PageStore();
 
   async componentDidMount() {

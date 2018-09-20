@@ -5,7 +5,7 @@ import Page from './../components/page.js';
 import navigator from './../services/navigator.service.js';
 import appStore from './../stores/app.store.js';
 
-@observer export default class IndexPage extends React.Component {
+export default @observer class IndexPage extends React.Component {
   static async getInitialProps({ query }) {
     return {
       pageName: query.page

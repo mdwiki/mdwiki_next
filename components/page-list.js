@@ -7,7 +7,7 @@ import appStore from './../stores/app.store.js';
 import navigator from './../services/navigator.service.js';
 import { screensizes } from './../common/styles/screensizes.js';
 
-@observer export default class PageList extends React.Component {
+export default @observer class PageList extends React.Component {
   componentDidMount() {
     this.loadPages();
   }

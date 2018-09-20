@@ -11,7 +11,7 @@ import { screensizes } from './../common/styles/screensizes.js';
 import Dialog from './dialog.js';
 import DialogStore from './../stores/dialog.store.js';
 
-@observer export default class PageToolbarComponent extends React.Component {
+export default @observer class PageToolbarComponent extends React.Component {
   static propTypes = {
     pageStore: PropTypes.object.isRequired,
     onCreatePage: PropTypes.func.isRequired,

@@ -13,7 +13,7 @@ import navigator from './../services/navigator.service.js';
 
 const DELAY_TYPE_TIMEOUT = 1000;
 
-@observer export default class SearchPage extends React.Component {
+export default @observer class SearchPage extends React.Component {
   static getInitialProps({ query }) {
     return {
       searchTerm: query.searchTerm

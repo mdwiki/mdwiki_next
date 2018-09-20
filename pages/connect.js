@@ -9,7 +9,7 @@ import navigator from './../services/navigator.service.js';
 
 const DELAY_TYPE_TIMEOUT = 1000;
 
-@observer export default class ConnectPage extends React.Component {
+export default @observer class ConnectPage extends React.Component {
   static async getInitialProps({ req, query }) {
     const user = query.user;
     const repository = query.repository;

@@ -32,7 +32,7 @@ const SimpleMDEOptions = {
   ]
 };
 
-@observer export default class MarkdownEditorComponent extends React.Component {
+export default @observer class MarkdownEditorComponent extends React.Component {
   static propTypes = {
     pageStore: PropTypes.object.isRequired,
     onSavePage: PropTypes.func.isRequired

@@ -12,7 +12,7 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-@observer export default class DialogComponent extends React.Component {
+export default @observer class DialogComponent extends React.Component {
   static propTypes = {
     title: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
